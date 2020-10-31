@@ -64,7 +64,7 @@ app.get('/details/:ticker', function (req, res) {
     const stock_ticker = () => {
       return new Promise(resolve => {
         try {
-           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${startDate}&resampleFreq=${iexResampleFreq}&columns=${columns}&token=${tiingoKey}`));
+           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${startDate}&resampleFreq=${iexResampleFreq}&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
         }
@@ -96,15 +96,82 @@ app.get('/details/:ticker', function (req, res) {
     
     return Promise.all([query_ticker(), iex_ticker(), historical_data(), stock_ticker(), autocomplete_promise(), news_data()]).then((responses) => {
       const query_data = responses[0].data;
+
+      const query_ticker = query_data['ticker']
+      const query_name = query_data['name']
+      const query_description = query_data['description']
+      const query_date = query_data['startDate']
+      const query_code = query_data['exchangeCode']
+
       const iex_data = responses[1].data;
+
+      const iex_ticker = iex_data['ticker'];
+      const iex_timestamp = iex_data['timestamp'];
+      const iex_last = iex_data['last'];
+      const iex_prevClose = iex_data['prevClose'];
+      const iex_open = iex_data['open'];
+      const iex_high = iex_data['high'];
+      const iex_low = iex_data['low'];
+      const iex_mid = iex_data['mid'];
+      const iex_volume = iex_data['volume'];
+      const iex_bidsize = iex_data['bidSize'];
+      const iex_bidprice = iex_data['bidPrice'];
+      const iex_asksize = iex_data['askSize'];
+      const iex_askprice = iex_data['askPrice'];
+
+
       const historical = responses[2].data;
-      const stock_data = responses[3].data;
+
+      const historical_date = historical['date'];
+      const historical_open = historical['open'];
+      const historical_high = historical['high'];
+      const historical_low = historical['low'];
+      const historical_close = historical['close'];
+      const historical_volume = historical['volume'];
+
+      const last_day_stock_data = responses[3].data;
+
+      const last_date = last_day_stock_data['date'];
+      const last_open = last_day_stock_data['open'];
+      const last_high = last_day_stock_data['high'];
+      const last_low = last_day_stock_data['low'];
+      const last_close = last_day_stock_data['close'];
+      const last_volume = last_day_stock_data['volume'];
+
       const autocomplete_data = responses[4].data;
+
+      const autocomplete_ticker = autocomplete_data['ticker'];
+      const autocomplete_name = autocomplete_data['name'];
+
       const news_data = responses[5].data;
+      newsArray = []
+      let counter = 0;
+      for (article of news_data['articles']) {
+        if (counter === 5) {
+          break;
+        }
+        const new_article = {
+          url: article['url'],
+          title: article['title'],
+          description: article['description'],
+          source: article['source'],
+          urlToImage: article['urlToImage'],
+          publishedAt: article['publishedAt'],
+        };
+        newsArray.push(new_article);
+        counter += 1;
+      }
+
+
 ;
 
       const bigString = String(query_data) + String(iex_data) + String(historical) + String(stock_data) + String(autocomplete_data) + String(news_data);
-      console.log(iex_data)
+      // console.log(query_data)
+      // console.log(iex_data)
+      console.log(historical) // looks like we're still missing out on these two guys, need to figure out what's up with the query
+      console.log(stock_data)
+      // console.log(autocomplete_data)
+      // console.log(news_data)
       return res.send(query_data)
     }).catch(e => console.log(e));
 
