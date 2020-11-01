@@ -1,0 +1,20 @@
+.footer {
+    position: absolute;
+    height: 80px;
+    bottom: 0;
+    line-height: 80px;
+    background-color: lightgray;
+    width: 100%;
+    
+}
+
+.container {
+    width: auto;
+    max-width: 600px;
+    padding: 0 15px;
+}
+
+p {
+    text-align: center;
+    color: gray;
+}
