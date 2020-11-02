@@ -120,26 +120,59 @@ app.get('/details/:ticker', function (req, res) {
       const iex_data = responses[1].data[0];
       const historical = responses[2].data;
       const last_day_stock_data = responses[3].data;
-      const news_returned = responses[4].data;
+
+      const news_data = responses[4].data;
+
+      newsArray = []
+      let counter = 0;
+      for (article of news_data['articles']) {
+        if (counter === 20) {
+          break;
+        }
+        const new_article = {
+          url: article['url'],
+          title: article['title'],
+          description: article['description'],
+          source: article['source'],
+          urlToImage: article['urlToImage'],
+          publishedAt: article['publishedAt'],
+        };
+        newsArray.push(new_article);
+        counter += 1;
+      }
+
+
 
       last = iex_data['last']
-      prev_close = iex_data['prevClose']
+      prevClose = iex_data['prevClose']
 
-      change = String((Number(last) - Number(prev_close)).toFixed(2))
-      change_percent = String((Number(change)/Number(prev_close) * 100).toFixed(2))
+      change = String((Number(last) - Number(prevClose)).toFixed(2))
+      changePercent = String((Number(change)/Number(prevClose) * 100).toFixed(2))
       // volume = str(stock_summary_info['volume'])
+
 
       
       const to_return = {
         ticker: query_data['ticker'],
         companyName: query_data['name'],
-        query_description: query_data['description'],
-        company_date: query_data['startDate'],
-        date: startDate,
-        last: iex_data['last'],
+        description: query_data['description'],
+        startDate: query_data['startDate'], // start date of the company
+        date: startDate, //  today's date defined at the top of the function
+        last: last,
         exchangeCode: query_data['exchangeCode'],
         change: change,
-        change_percent: change_percent,
+        changePercent: changePercent,
+        highPrice: iex_data['high'],
+        lowPrice: iex_data['low'],
+        openPrice: iex_data['open'],
+        closePrice: prevClose,
+        volume: iex_data['volume'],
+        midPrice: iex_data['mid'],
+        askPrice: iex_data['askPrice'],
+        askSize: iex_data['askSize'],
+        bidPrice: iex_data['bidPrice'],
+        bidSize: iex_data['bidSize'],
+        news: newsArray,
       }
 
       res.header('Access-Control-Allow-Origin', '*');
@@ -186,24 +219,6 @@ app.get('/details/:ticker', function (req, res) {
       const last_close = last_day_stock_data['close'];
       const last_volume = last_day_stock_data['volume'];
 
-      const news_data = responses[4].data;
-      newsArray = []
-      let counter = 0;
-      for (article of news_data['articles']) {
-        if (counter === 5) {
-          break;
-        }
-        const new_article = {
-          url: article['url'],
-          title: article['title'],
-          description: article['description'],
-          source: article['source'],
-          urlToImage: article['urlToImage'],
-          publishedAt: article['publishedAt'],
-        };
-        newsArray.push(new_article);
-        counter += 1;
-      }
 
       const bigString = String(query_data) + String(iex_data) + String(historical) + String(stock_data) + String(news_data);
       // console.log(query_data)

@@ -14,7 +14,4 @@ export class SearchService {
     console.log(this.searchURL)
     return this.http.get<Stock>(`${this.searchURL}${ticker}`)
   }
-  // getSearch():Observable<SearchResult[]> {
-  //   return this.http.get<SearchResult>(`${this.searchURL}`);
-  // }
 }

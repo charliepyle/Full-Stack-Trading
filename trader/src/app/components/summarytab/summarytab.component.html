@@ -1,0 +1,33 @@
+<div class='container'>
+    <div class='item'>
+        <div class="row">
+            <div class="col-sm">High Price: {{stock.highPrice}}</div>
+            <div *ngIf="open" class="col-sm text-right">Mid Price: {{stock.midPrice}}</div> 
+        </div>
+        <div class="row">
+            <div class="col-sm">Low Price: {{stock.lowPrice}}</div>
+            <div *ngIf="open" class="col-sm text-right">Ask Price: {{stock.askPrice}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Open Price: {{stock.openPrice}}</div>
+            <div *ngIf="open" class="col-sm text-right">Ask Size: {{stock.askSize}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Prev. Close: {{stock.closePrice}}</div>
+            <div *ngIf="open" class="col-sm text-right">Bid Price: {{stock.bidPrice}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Volume: {{stock.volume}}</div>
+            <div *ngIf="open" class="col-sm text-right">Bid Size: {{stock.bidSize}}</div>
+        </div>
+        <div class="row">
+            Start Date: {{stock.startDate}}
+        </div>
+        <div class="row">
+            {{stock.description}}
+        </div>
+    </div>
+    <div class='item text-right'>stuff2</div>
+</div>
+<!-- 
+<p>summarytab works!</p> -->
