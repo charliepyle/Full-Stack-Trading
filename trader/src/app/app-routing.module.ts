@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { WatchlistComponent } from './components/watchlist/watchlist.component';
 import { HomeComponent } from './components/home/home.component';
+import { DetailsComponent } from './components/details/details.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
     path: 'portfolio',
     component: PortfolioComponent
   },
+  {
+    path: 'details/:ticker',
+    component: DetailsComponent
+  }
 ];
 
 @NgModule({
