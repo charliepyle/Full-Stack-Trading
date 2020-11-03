@@ -24,6 +24,8 @@
     "@angular/router": "~10.2.0",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "bootstrap": "^4.5.3",
+    "highcharts": "^8.2.2",
+    "highcharts-angular": "^2.8.2",
     "jquery": "^3.5.1",
     "json-server": "^0.16.2",
     "ngx-bootstrap": "^6.1.0",

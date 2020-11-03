@@ -1,0 +1,21 @@
+<div role='button' (click)='redirect()' >
+    <mat-card class='stockWatchCard'>
+        <!-- <img mat-card-image [src]="newsItem.urlToImage" alt='photo'> -->
+        <div class="row">
+            <div class="col text-left">
+                <mat-card-content>{{stockItem.ticker}}</mat-card-content>
+            </div>
+            <div class="col text-right">
+                <mat-card-content>{{stockItem.lastPrice}}</mat-card-content>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-left">
+                <mat-card-content>{{stockItem.companyName}}</mat-card-content>
+            </div>
+            <div class="col text-right">
+                <mat-card-content>{{stockItem.change}}({{stockItem.changePercent}})</mat-card-content>
+            </div>
+        </div>
+    </mat-card>
+</div>

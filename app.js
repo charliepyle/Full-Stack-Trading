@@ -54,8 +54,10 @@ app.get('/details/:ticker', function (req, res) {
     const newsKey = "1d3ab083c679498f9f15b7b37a2b596f"
     const date = new Date();
     const startDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() // need to fix this
+    date.setFullYear(date.getFullYear()-2);
+    let twoYearsAgo = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() // need to fix this
     const columns = 'open,high,low,close,volume'
-    const iexResampleFreq = '4min'
+    const iexResampleFreq = '12hour'
     const dailyResampleFreq = 'daily'
 
 
@@ -84,7 +86,7 @@ app.get('/details/:ticker', function (req, res) {
     const historical_data = () => {
       return new Promise(resolve => {
         try {
-           resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${startDate}&resampleFreq=${dailyResampleFreq}&token=${tiingoKey}`));
+           resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=${dailyResampleFreq}&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
         }
@@ -94,7 +96,7 @@ app.get('/details/:ticker', function (req, res) {
     const stock_ticker = () => {
       return new Promise(resolve => {
         try {
-           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${startDate}&resampleFreq=${iexResampleFreq}&token=${tiingoKey}`));
+           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=12hour&columns=open,high,low,close,volume&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
         }
@@ -119,8 +121,9 @@ app.get('/details/:ticker', function (req, res) {
       const query_data = responses[0].data;
       const iex_data = responses[1].data[0];
       const historical = responses[2].data;
-      const last_day_stock_data = responses[3].data;
-
+      
+      const stock_price = responses[3].data;
+      // console.log(stock_price)
       const news_data = responses[4].data;
 
       newsArray = []
@@ -129,11 +132,17 @@ app.get('/details/:ticker', function (req, res) {
         if (counter === 20) {
           break;
         }
+        let source = null
+        if (article['source'] != null) {
+          source = article['source']['name']
+        }
+
+
         const new_article = {
           url: article['url'],
           title: article['title'],
           description: article['description'],
-          source: article['source'],
+          source: source,
           urlToImage: article['urlToImage'],
           publishedAt: article['publishedAt'],
         };
@@ -141,13 +150,34 @@ app.get('/details/:ticker', function (req, res) {
         counter += 1;
       }
 
+      const stockClose = []
+      const stockVolume = []
+      for (elem of stock_price) {
+        const date = new Date(elem['date'])
+        let dateFormatted = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getUTCHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        dateFormatted = Date.parse(dateFormatted)
+        day_price = [
+          dateFormatted,
+          elem['open'],
+          elem['high'],
+          elem['low'],
+          elem['close'],
+        ]
+        day_volume = [
+          dateFormatted,
+          elem['volume'] 
+        ]
+        stockClose.push(day_price)
+        stockVolume.push(day_volume)
+      }
 
 
-      last = iex_data['last']
-      prevClose = iex_data['prevClose']
 
-      change = String((Number(last) - Number(prevClose)).toFixed(2))
-      changePercent = String((Number(change)/Number(prevClose) * 100).toFixed(2))
+      let last = iex_data['last']
+      let prevClose = iex_data['prevClose']
+
+      let change = String((Number(last) - Number(prevClose)).toFixed(2))
+      let changePercent = String((Number(change)/Number(prevClose) * 100).toFixed(2))
       // volume = str(stock_summary_info['volume'])
 
 
@@ -173,6 +203,8 @@ app.get('/details/:ticker', function (req, res) {
         bidPrice: iex_data['bidPrice'],
         bidSize: iex_data['bidSize'],
         news: newsArray,
+        stockClose: stockClose,
+        stockVolume: stockVolume
       }
 
       res.header('Access-Control-Allow-Origin', '*');

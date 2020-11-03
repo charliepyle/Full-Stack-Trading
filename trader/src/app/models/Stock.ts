@@ -1,4 +1,5 @@
 import { NewsItem } from './NewsItem';
+import { StockEvent } from './StockEvent';
 
 export class Stock {
     id: number;
@@ -23,5 +24,7 @@ export class Stock {
     exchangeCode: string;
     description: string;
     startDate: string;
-    news: NewsItem[]
+    news: NewsItem[];
+    stockClose: StockEvent[];
+    stockVolume: StockEvent[]
 }

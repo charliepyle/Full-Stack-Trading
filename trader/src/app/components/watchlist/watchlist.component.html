@@ -1,1 +1,3 @@
-<p>watchlist works!</p>
+<div class="card-container" *ngFor='let stockWatch of stocks; index as i'>
+    <app-stockwatchcard [stockItem]='stockWatch'></app-stockwatchcard>
+</div>

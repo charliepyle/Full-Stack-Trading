@@ -1,0 +1,10 @@
+.stockWatchCard {
+    max-width: 100%;
+    padding: 10px;
+}
+
+:host{
+    display: inline-block;
+    width: 50%;
+    padding: 10%;
+}

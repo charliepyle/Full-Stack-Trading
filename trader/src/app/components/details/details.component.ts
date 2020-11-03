@@ -10,18 +10,31 @@ import { NewsItem } from '../../models/NewsItem';
   styleUrls: ['./details.component.css']
 })
 export class DetailsComponent implements OnInit {
-  ticker = this.route.snapshot.paramMap.get("ticker")
+  ticker: String = this.route.snapshot.paramMap.get("ticker")
   stock: Stock;
+  stockSaved:Boolean
+  notStockSaved:Boolean
   open: Boolean;
   closed: Boolean;
-  newsArray: NewsItem[]
+  news: NewsItem[]
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
   constructor(private route: ActivatedRoute, private searchService:SearchService) { }
 
   ngOnInit(): void {
     this.searchService.getStock(this.ticker).subscribe(stock => {
       this.stock = stock;
-      console.log(this.stock);
+
+      if (localStorage.getItem(this.stock.ticker) == null) {
+        this.stockSaved = false; // change later to check if it's in local storage
+        this.notStockSaved = true;
+      }
+      else {
+        this.stockSaved = true; // change later to check if it's in local storage
+        this.notStockSaved = false;
+      }
+     
+
+      this.news = stock.news;
       if (this.stock.bidPrice === null) {
         this.open = false;
         this.closed = true;
@@ -31,6 +44,33 @@ export class DetailsComponent implements OnInit {
         this.closed = false;
       }
     })
+  }
+
+  stockSave() {
+    this.stockSaved = true;
+    this.notStockSaved = false;
+    let priceToSend;
+    if (this.open) {
+      priceToSend = this.stock.lastPrice;
+    }
+    else {
+      priceToSend = this.stock.closePrice;
+    }
+    const objectToStore = {
+      ticker: this.stock.ticker,
+      lastPrice: priceToSend,
+      change: this.stock.change,
+      changePercent: this.stock.changePercent,
+      companyName: this.stock.companyName,
+    }
+    localStorage.setItem(this.stock.ticker, JSON.stringify(objectToStore));
+    console.log(localStorage.getItem(this.stock.ticker));
+    // add to local storage eventually
+  }
+  stockUnsave() {
+    this.stockSaved = false;
+    this.notStockSaved = true
+    localStorage.removeItem(this.stock.ticker)
   }
 
 }

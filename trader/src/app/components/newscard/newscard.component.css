@@ -1,0 +1,12 @@
+
+.newsCard {
+    max-width: 100%;
+    padding: 10px;
+    /* display: inline-block; */
+}
+
+:host{
+    display: inline-block;
+    width: 50%;
+    padding: 10%;
+}
