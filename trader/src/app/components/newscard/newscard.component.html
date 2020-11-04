@@ -28,10 +28,10 @@
             <h3>Share</h3>
             <h3>
                 <a class="twitter-share-button"
-                ng-href="{{tweetString}}">
+                [href]="getTwitterURL()">
                 <i class="fab fa-twitter"></i></a>
                 <a class="facebook-share-button"
-                ng-href="{{tweetString}}">
+                [href]="getFacebookURL()">
                 <i class="fab fa-facebook"></i></a>
 
                 <!-- <fa-icon [icon]="['fab', 'twitter']"></fa-icon></a>

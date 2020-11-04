@@ -11,7 +11,7 @@
                 </svg></span>
             </div>
             
-            <div class="col-sm text-right">{{stock.last}}</div>
+            <div class="col-sm text-right">{{stock.lastPrice}}</div>
         </div>
         <div class="row">
             <div class="col-sm">{{stock.companyName}}</div>
@@ -56,9 +56,9 @@
     <p *ngIf='closed' style='text-align: center'>Market closed on {{stock.date}}</p>
     <div class="container">
         <mat-tab-group class='tab-group'>
-            <mat-tab label="Summary"> <app-summarytab></app-summarytab> </mat-tab>
+            <mat-tab label="Summary"> <app-summarytab [stock]='stock'></app-summarytab> </mat-tab>
             <mat-tab label="News"> <app-news></app-news> </mat-tab>
-            <mat-tab label="Charts"> <app-chart></app-chart> </mat-tab>
+            <mat-tab label="Charts"> <app-chart [stock]='stock' [historical]='true'></app-chart> </mat-tab>
         </mat-tab-group>
     </div>
     

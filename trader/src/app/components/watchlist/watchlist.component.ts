@@ -14,17 +14,21 @@ export class WatchlistComponent implements OnInit {
   ngOnInit(): void {
     this.stocks = new Array();
     for (let i=0; i < localStorage.length; i++) {
-      // console.log(localStorage.getItem(localStorage.key(i)));
       let objReturned = JSON.parse(localStorage.getItem(localStorage.key(i)));
-      if (objReturned.ticker != null) {
+      if (objReturned.ticker != null && objReturned.tracking == true) {
         this.stocks.push(objReturned);
       }
-      
-
-
-      // $('body').append(localStorage.getItem(localStorage.key(i)));
     }
     console.log(this.stocks);
+  }
+
+  deleteStockItem(stock) {
+    for (let i = 0; i < this.stocks.length; i++) {
+      if (this.stocks[i].ticker === stock.ticker) {
+        this.stocks.splice(i, 1);
+        break;
+      }
+    }
   }
 
 }

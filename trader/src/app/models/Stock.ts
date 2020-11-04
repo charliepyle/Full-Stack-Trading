@@ -19,13 +19,14 @@ export class Stock {
     askSize: number;
     bidPrice: number;
     bidSize: number;
-    last: number;
     date: string;
     exchangeCode: string;
     description: string;
     startDate: string;
     news: NewsItem[];
-    stockClose: StockEvent[];
-    stockVolume: StockEvent[];
+    historicalStockClose: StockEvent[];
+    lastDayStockClose: StockEvent[];
+    historicalStockVolume: StockEvent[];
+    lastDayStockVolume: StockEvent[];
     stockOpen: boolean;
 }

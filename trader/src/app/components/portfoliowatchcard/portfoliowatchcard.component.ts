@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { StockWatchItem } from 'src/app/models/StockWatchItem';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PortfoliowatchcardComponent implements OnInit {
   @Input() stockItem: StockWatchItem;
+  @Output() deleteStockItem: EventEmitter<StockWatchItem> = new EventEmitter();
   tempTotalPrice: number;
   tempQuantity: number;
   marketValue: number;
@@ -27,19 +28,37 @@ export class PortfoliowatchcardComponent implements OnInit {
   }
 
   buyModalClose() {
-    let priceToAdd = this.stockItem.lastPrice * this.tempQuantity;
+    let priceToAdd = Number((this.stockItem.lastPrice * this.tempQuantity).toFixed(2));
     this.stockItem.quantity += this.tempQuantity;
+    this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.stockItem.totalCost += priceToAdd;
-    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
-    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
+    this.costPerShare =  Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
+    this.marketValue =  Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
+
+    let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
+    storedStock.quantity = this.stockItem.quantity;
+    storedStock.totalCost = this.stockItem.totalCost;
+    localStorage.setItem(storedStock.ticker, JSON.stringify(storedStock));
+
   }
 
   sellModalClose() {
-    let priceToRemove = this.costPerShare * this.tempQuantity;
+    let priceToRemove = Number((this.costPerShare * this.tempQuantity).toFixed(2));
     this.stockItem.quantity -= this.tempQuantity;
+    this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.stockItem.totalCost -= priceToRemove;
-    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
-    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
+    this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
+    this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
+
+    let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
+    storedStock.quantity = this.stockItem.quantity;
+    storedStock.totalCost = this.stockItem.totalCost;
+    localStorage.setItem(storedStock.ticker, JSON.stringify(storedStock));
+    // if quantity == 0
+    if (this.stockItem.quantity == 0) {
+      this.deleteStockItem.emit(this.stockItem);
+    }
+    
   }
 
   
@@ -48,13 +67,15 @@ export class PortfoliowatchcardComponent implements OnInit {
     // console.log(this.mostRecentPrice);
     // console.log(quantity);
 
-    this.tempTotalPrice= this.stockItem.lastPrice * Number(quantity);
+    this.tempTotalPrice= Number((this.stockItem.lastPrice * Number(quantity)).toFixed(2));
     this.tempQuantity = Number(quantity);
   }
 
   ngOnInit(): void {
-    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
-    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
+    this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
+    this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
+    this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
+
   }
 
 }

@@ -79,12 +79,6 @@ app.get('/autocomplete/:ticker', function(req, res) {
   }).catch(e => console.log(e));
 })
 
-
-
-app.get('/portfolio', function (req, res) {
-  res.send('Hello World!')
-})
-
 app.get('/details/:ticker', function (req, res) {
   
     const ticker = req.params['ticker']
@@ -94,7 +88,6 @@ app.get('/details/:ticker', function (req, res) {
     const startDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() // need to fix this
     date.setFullYear(date.getFullYear()-2);
     let twoYearsAgo = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() // need to fix this
-    const columns = 'open,high,low,close,volume'
     const iexResampleFreq = '12hour'
     const dailyResampleFreq = 'daily'
 
@@ -124,17 +117,17 @@ app.get('/details/:ticker', function (req, res) {
     const historical_data = () => {
       return new Promise(resolve => {
         try {
-           resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=${dailyResampleFreq}&token=${tiingoKey}`));
+           resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=${dailyResampleFreq}&columns=open,high,low,close,volume&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
         }
       })  
     }
    
-    const stock_ticker = () => {
+    const today_data = () => {
       return new Promise(resolve => {
         try {
-           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=12hour&columns=open,high,low,close,volume&token=${tiingoKey}`));
+           resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${startDate}&resampleFreq=4min&columns=open,high,low,close,volume&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
         }
@@ -155,12 +148,12 @@ app.get('/details/:ticker', function (req, res) {
     }
 
     
-    return Promise.all([query_ticker(), iex_ticker(), historical_data(), stock_ticker(), news_data()]).then((responses) => {
+    return Promise.all([query_ticker(), iex_ticker(), historical_data(), today_data(), news_data()]).then((responses) => {
       const query_data = responses[0].data;
       const iex_data = responses[1].data[0];
-      const historical = responses[2].data;
+      const historical_price = responses[2].data;
       
-      const stock_price = responses[3].data;
+      const last_day_stock_price = responses[3].data;
       const news_data = responses[4].data;
 
       newsArray = []
@@ -187,9 +180,27 @@ app.get('/details/:ticker', function (req, res) {
         counter += 1;
       }
 
-      const stockClose = []
-      const stockVolume = []
-      for (elem of stock_price) {
+      const historicalStockClose = []
+      const historicalStockVolume = []
+      const lastDayStockClose = []
+      const lastDayStockVolume = []
+      for (elem of last_day_stock_price) {
+        const date = new Date(elem['date'])
+        let dateFormatted = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getUTCHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        dateFormatted = Date.parse(dateFormatted)
+        day_price = [
+          dateFormatted,
+          elem['close'],
+        ]
+        day_volume = [
+          dateFormatted,
+          elem['volume'] 
+        ]
+        lastDayStockClose.push(day_price)
+        lastDayStockVolume.push(day_volume)
+      }
+
+      for (elem of historical_price) {
         const date = new Date(elem['date'])
         let dateFormatted = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getUTCHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         dateFormatted = Date.parse(dateFormatted)
@@ -204,8 +215,8 @@ app.get('/details/:ticker', function (req, res) {
           dateFormatted,
           elem['volume'] 
         ]
-        stockClose.push(day_price)
-        stockVolume.push(day_volume)
+        historicalStockClose.push(day_price)
+        historicalStockVolume.push(day_volume)
       }
 
       let last = iex_data['last']
@@ -224,6 +235,7 @@ app.get('/details/:ticker', function (req, res) {
         stockOpen = false
       }
 
+
       
       const to_return = {
         ticker: query_data['ticker'],
@@ -231,7 +243,7 @@ app.get('/details/:ticker', function (req, res) {
         description: query_data['description'],
         startDate: query_data['startDate'], // start date of the company
         date: startDate, //  today's date defined at the top of the function
-        last: last,
+        lastPrice: last,
         exchangeCode: query_data['exchangeCode'],
         change: change,
         changePercent: changePercent,
@@ -246,64 +258,17 @@ app.get('/details/:ticker', function (req, res) {
         bidPrice: iex_data['bidPrice'],
         bidSize: iex_data['bidSize'],
         news: newsArray,
-        stockClose: stockClose,
-        stockVolume: stockVolume,
+        historicalStockClose: historicalStockClose,
+        historicalStockVolume: historicalStockVolume,
+        lastDayStockClose: lastDayStockClose,
+        lastDayStockVolume: lastDayStockVolume,
         stockOpen: stockOpen,
       }
 
       res.header('Access-Control-Allow-Origin', '*');
       return res.send(to_return)
 
-      const query_ticker = query_data['ticker']
-      const query_name = query_data['name']
-      const query_description = query_data['description']
-      const query_date = query_data['startDate']
-      const query_code = query_data['exchangeCode']
 
-      res.header('Access-Control-Allow-Origin', '*');
-      return res.send(query_data)
-
-
-      const iex_ticker = iex_data['ticker'];
-      const iex_timestamp = iex_data['timestamp'];
-      const iex_last = iex_data['last'];
-      const iex_prevClose = iex_data['prevClose'];
-      const iex_open = iex_data['open'];
-      const iex_high = iex_data['high'];
-      const iex_low = iex_data['low'];
-      const iex_mid = iex_data['mid'];
-      const iex_volume = iex_data['volume'];
-      const iex_bidsize = iex_data['bidSize'];
-      const iex_bidprice = iex_data['bidPrice'];
-      const iex_asksize = iex_data['askSize'];
-      const iex_askprice = iex_data['askPrice'];
-
-
-
-      const historical_date = historical['date'];
-      const historical_open = historical['open'];
-      const historical_high = historical['high'];
-      const historical_low = historical['low'];
-      const historical_close = historical['close'];
-      const historical_volume = historical['volume'];
-
-
-      const last_date = last_day_stock_data['date'];
-      const last_open = last_day_stock_data['open'];
-      const last_high = last_day_stock_data['high'];
-      const last_low = last_day_stock_data['low'];
-      const last_close = last_day_stock_data['close'];
-      const last_volume = last_day_stock_data['volume'];
-
-
-      const bigString = String(query_data) + String(iex_data) + String(historical) + String(stock_data) + String(news_data);
-      // console.log(query_data)
-      // console.log(iex_data)
-      console.log(historical) // looks like we're still missing out on these two guys, need to figure out what's up with the query
-      console.log(stock_data)
-      // console.log(autocomplete_data)
-      // console.log(news_data)
-      return res.send(query_data)
     }).catch(e => console.log(e));
 
 

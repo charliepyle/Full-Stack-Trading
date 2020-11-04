@@ -4,6 +4,7 @@ import { SearchService } from '../../services/search.service';
 import { ActivatedRoute } from "@angular/router";
 import { NewsItem } from '../../models/NewsItem';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { interval, Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-details',
@@ -12,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DetailsComponent implements OnInit {
   ticker: String = this.route.snapshot.paramMap.get("ticker")
+  refreshSubscription: Subscription
   stock: Stock;
   stockSaved:Boolean
   notStockSaved:Boolean
@@ -22,23 +24,36 @@ export class DetailsComponent implements OnInit {
   totalPrice: number;
   mostRecentPrice: number;
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
-  constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { }
+  constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { 
+    const intervalDuration = 15000;
+    this.refreshSubscription = interval(intervalDuration).subscribe(result => {
+      this.refreshMarket();
+    })
+  }
 
   ngOnInit(): void {
+    this.refreshMarket()
+  }
+
+  refreshMarket() {
     this.searchService.getStock(this.ticker).subscribe(stock => {
       this.stock = stock;
+      const storedStock = JSON.parse(localStorage.getItem(this.stock.ticker));
+      console.log(this.stock);
+      if (storedStock != null && storedStock.tracking == true) {
+        this.stockSaved = true; 
+        this.notStockSaved = false;
 
-      if (localStorage.getItem(this.stock.ticker) == null) {
-        this.stockSaved = false; // change later to check if it's in local storage
-        this.notStockSaved = true;
+        
       }
       else {
-        this.stockSaved = true; // change later to check if it's in local storage
-        this.notStockSaved = false;
+        this.stockSaved = false;
+        this.notStockSaved = true;
       }
      
 
       this.news = stock.news;
+
       if (this.stock.stockOpen == false) {
         this.open = false;
         this.closed = true;
@@ -61,8 +76,6 @@ export class DetailsComponent implements OnInit {
 
   modalClose() {
     const stockStored = JSON.parse(localStorage.getItem(this.stock.ticker));
-    console.log('alksdfkldsjflsd')
-    console.log(this.quantity);
     if (stockStored == null) {
       const objectToStore = {
         ticker: this.stock.ticker,
@@ -86,24 +99,33 @@ export class DetailsComponent implements OnInit {
   }
 
   updateTotalPrice(quantity) {
-    this.totalPrice = this.mostRecentPrice * Number(quantity);
+    this.totalPrice = Number((this.mostRecentPrice * Number(quantity)).toFixed(2));
     this.quantity = Number(quantity);
   }
 
   stockSave() {
     this.stockSaved = true;
     this.notStockSaved = false;
+    
+    let currentlyStored = JSON.parse(localStorage.getItem(this.stock.ticker));
 
-    const objectToStore = {
-      ticker: this.stock.ticker,
-      lastPrice: this.mostRecentPrice,
-      change: this.stock.change,
-      changePercent: this.stock.changePercent,
-      companyName: this.stock.companyName,
-      tracking: true,
+    if (currentlyStored == null) {
+      const objectToStore = {
+        ticker: this.stock.ticker,
+        lastPrice: this.mostRecentPrice,
+        change: this.stock.change,
+        changePercent: this.stock.changePercent,
+        companyName: this.stock.companyName,
+        tracking: true,
+      }
+      localStorage.setItem(this.stock.ticker, JSON.stringify(objectToStore));
     }
-    localStorage.setItem(this.stock.ticker, JSON.stringify(objectToStore));
-    // add to local storage eventually
+    else {
+      currentlyStored.tracking = true;
+      localStorage.setItem(this.stock.ticker, JSON.stringify(currentlyStored));
+    }
+
+
   }
   stockUnsave() {
     this.stockSaved = false;
@@ -111,6 +133,10 @@ export class DetailsComponent implements OnInit {
     let currentlyStored = JSON.parse(localStorage.getItem(this.stock.ticker));
     currentlyStored.tracking = false;
     localStorage.setItem(this.stock.ticker, JSON.stringify(currentlyStored));
+  }
+
+  ngOnDestroy() {
+    this.refreshSubscription.unsubscribe();
   }
 
 }

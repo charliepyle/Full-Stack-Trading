@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { Stock } from 'src/app/models/Stock';
 import { DetailsComponent} from '../details/details.component';
 
@@ -8,14 +8,15 @@ import { DetailsComponent} from '../details/details.component';
   styleUrls: ['./summarytab.component.css']
 })
 export class SummarytabComponent implements OnInit {
-
+  @Input() stock: Stock;
   constructor(@Inject(DetailsComponent) private parent: DetailsComponent) { }
-  stock: Stock;
+  // stock: Stock;
   open: Boolean;
 
   ngOnInit(): void {
-    this.stock = this.parent.stock;
-    if (this.stock.bidPrice === null) {
+    // this.stock = this.parent.stock;
+    console.log(this.stock);
+    if (this.stock.stockOpen === false) {
       this.open = false;
     }
     else {

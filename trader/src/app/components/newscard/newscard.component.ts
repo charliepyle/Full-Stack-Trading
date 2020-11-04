@@ -23,6 +23,14 @@ export class NewscardComponent implements OnInit {
     }).catch(e => console.log(e));
   }
 
+  getTwitterURL() {
+    return `https://twitter.com/intent/tweet?text=${this.newsItem.title}&url=${this.newsItem.url}`;
+  }
+
+  getFacebookURL() {
+    return `https://www.facebook.com/sharer/sharer.php?u=${this.newsItem.url}&amp;src=sdkpreparse`
+  }
+
   ngOnInit(): void {
     library.add(faTwitter);
     if (this.newsItem.source == null) {
@@ -31,8 +39,6 @@ export class NewscardComponent implements OnInit {
     else {
       this.innerhtml = this.newsItem.source + ": " + this.newsItem.description;
     }
-    this.tweetString = "https://twitter.com/intent/tweet?text=" + this.newsItem.title + ": " + this.newsItem.url;
-    console.log(this.tweetString);
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StockWatchItem } from 'src/app/models/StockWatchItem';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -9,24 +10,47 @@ import { StockWatchItem } from 'src/app/models/StockWatchItem';
 export class PortfolioComponent implements OnInit {
 
   stocks: StockWatchItem[];
-  constructor() { }
+  constructor(private searchService:SearchService) { }
 
   ngOnInit(): void {
-    this.stocks = new Array();
+    
+    let stockTickers = new Array();
+    
     for (let i=0; i < localStorage.length; i++) {
       // console.log(localStorage.getItem(localStorage.key(i)));
       let objReturned = JSON.parse(localStorage.getItem(localStorage.key(i)));
       console.log(objReturned);
       if (objReturned.ticker != null && objReturned.quantity != null && objReturned.quantity != 0) {
-        this.stocks.push(objReturned);
+        stockTickers.push(objReturned);
       }
-      
-
-
-      // $('body').append(localStorage.getItem(localStorage.key(i)));
     }
-    console.log(this.stocks);
 
+    let stockString = "";
+    for (const stock of stockTickers) {
+      stockString += stock.ticker + ","
+    }
+
+    this.stocks = new Array();
+    this.searchService.getLatestPrices(stockString).subscribe(stocksReturned => {
+      for (const stock of stocksReturned) {
+        const storedStock = JSON.parse(localStorage.getItem(stock.ticker));
+        storedStock.lastPrice = stock.lastPrice;
+        localStorage.setItem(stock.ticker, JSON.stringify(storedStock));
+        this.stocks.push(storedStock);
+      }
+
+      console.log(this.stocks);
+    }) 
+
+  }
+
+  deleteStockItem(stock) {
+    for (let i = 0; i < this.stocks.length; i++) {
+      if (this.stocks[i].ticker === stock.ticker) {
+        this.stocks.splice(i, 1);
+        break;
+      }
+    }
   }
 
 }
