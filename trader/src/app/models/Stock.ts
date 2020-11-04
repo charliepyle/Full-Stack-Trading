@@ -26,5 +26,6 @@ export class Stock {
     startDate: string;
     news: NewsItem[];
     stockClose: StockEvent[];
-    stockVolume: StockEvent[]
+    stockVolume: StockEvent[];
+    stockOpen: boolean;
 }

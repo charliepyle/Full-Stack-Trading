@@ -4,4 +4,7 @@ export class StockWatchItem {
     changePercent: number;
     companyName: string;
     lastPrice: number;
+    quantity: number;
+    totalCost: number; 
+    tracking: boolean
 }

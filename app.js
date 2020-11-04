@@ -12,14 +12,44 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-app.get('/watchlist', function (req, res) {
-  res.send('Hello World!')
+app.get('/tickers/:ticker', function (req, res) {
+  const tickerString = req.params['ticker'];
+  // tickerArray = tickerString.split(',');
+  // console.log(tickerString);
+  const tiingoKey = "15016c1ef003526e28d8e253da6a90d49b3bed99"
+  const tickers_promise = () => {
+    return new Promise(resolve => {
+      try {
+         resolve(axios.get(`https://api.tiingo.com/iex/?tickers=${tickerString}&token=${tiingoKey}`));
+      } catch (error) {
+        console.error(error);
+      }
+    })  
+  }
+
+  return Promise.all([tickers_promise()]).then((responses) => {
+    
+    const autocomplete_data = responses[0].data;
+    ticker_array = []
+    for (item of autocomplete_data) {
+      smallItem = {
+        ticker: item['ticker'],
+        lastPrice: item['last']
+      }
+      ticker_array.push(smallItem)
+    }
+
+    // const autocomplete_ticker = autocomplete_data['ticker'];
+    // const autocomplete_name = autocomplete_data['name'];
+    res.header('Access-Control-Allow-Origin', '*');
+    return res.send(ticker_array);
+  }).catch(e => console.log(e));
+  // res.send('Hello World!')
 })
 
-app.get('autocomplete/:ticker', function(req, res) {
+app.get('/autocomplete/:ticker', function(req, res) {
   const ticker = req.params['ticker']
   const tiingoKey = "15016c1ef003526e28d8e253da6a90d49b3bed99"
-
   const autocomplete_promise = () => {
     return new Promise(resolve => {
       try {
@@ -33,11 +63,19 @@ app.get('autocomplete/:ticker', function(req, res) {
   return Promise.all([autocomplete_promise()]).then((responses) => {
 
     const autocomplete_data = responses[0].data;
+    autocomplete_array = []
+    for (item of autocomplete_data) {
+      smallItem = {
+        ticker: item['ticker'],
+        companyName: item['name']
+      }
+      autocomplete_array.push(smallItem)
+    }
 
-    const autocomplete_ticker = autocomplete_data['ticker'];
-    const autocomplete_name = autocomplete_data['name'];
+    // const autocomplete_ticker = autocomplete_data['ticker'];
+    // const autocomplete_name = autocomplete_data['name'];
     res.header('Access-Control-Allow-Origin', '*');
-    return res.send(query_data)
+    return res.send(autocomplete_array);
   }).catch(e => console.log(e));
 })
 
@@ -123,7 +161,6 @@ app.get('/details/:ticker', function (req, res) {
       const historical = responses[2].data;
       
       const stock_price = responses[3].data;
-      // console.log(stock_price)
       const news_data = responses[4].data;
 
       newsArray = []
@@ -171,15 +208,21 @@ app.get('/details/:ticker', function (req, res) {
         stockVolume.push(day_volume)
       }
 
-
-
       let last = iex_data['last']
       let prevClose = iex_data['prevClose']
 
       let change = String((Number(last) - Number(prevClose)).toFixed(2))
       let changePercent = String((Number(change)/Number(prevClose) * 100).toFixed(2))
       // volume = str(stock_summary_info['volume'])
-
+      currTime = new Date()
+      const timeDiff = (currTime - Date.parse(iex_data['timestamp']))/1000
+      let stockOpen = null;
+      if (timeDiff < 60) {
+        stockOpen = true
+      }
+      else {
+        stockOpen = false
+      }
 
       
       const to_return = {
@@ -204,7 +247,8 @@ app.get('/details/:ticker', function (req, res) {
         bidSize: iex_data['bidSize'],
         news: newsArray,
         stockClose: stockClose,
-        stockVolume: stockVolume
+        stockVolume: stockVolume,
+        stockOpen: stockOpen,
       }
 
       res.header('Access-Control-Allow-Origin', '*');

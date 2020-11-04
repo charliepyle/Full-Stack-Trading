@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -20,6 +22,7 @@ import { NewsComponent } from './components/news/news.component';
 import { NewscardComponent } from './components/newscard/newscard.component';
 import { ChartComponent } from './components/chart/chart.component';
 import { StockwatchcardComponent } from './components/stockwatchcard/stockwatchcard.component';
+import { PortfoliowatchcardComponent } from './components/portfoliowatchcard/portfoliowatchcard.component';
 
 
 
@@ -38,6 +41,7 @@ import { StockwatchcardComponent } from './components/stockwatchcard/stockwatchc
     NewscardComponent,
     ChartComponent,
     StockwatchcardComponent,
+    PortfoliowatchcardComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,10 @@ import { StockwatchcardComponent } from './components/stockwatchcard/stockwatchc
     HttpClientModule,
     MatTabsModule,
     MatCardModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

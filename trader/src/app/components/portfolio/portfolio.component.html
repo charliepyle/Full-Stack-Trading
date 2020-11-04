@@ -1,1 +1,3 @@
-<p>portfolio works!</p>
+<div class="container" *ngFor='let stockWatch of stocks; index as i'>
+    <app-portfoliowatchcard [stockItem]='stockWatch'></app-portfoliowatchcard>
+</div>

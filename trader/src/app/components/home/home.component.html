@@ -1,7 +1,17 @@
 <div class="container">
     <h1>STOCK SEARCH</h1>
-    <form class="form-inline my-2 my-lg-0" (ngSubmit)="onSubmit()">
+    <!-- <form class="form-inline my-2 my-lg-0" (ngSubmit)="onSubmit()">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
+    <form>
+        <input type='text' [formControl]='search' (change)='textChanged()' [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option role='button' *ngFor="let stock of stocks" [value]="stock" (click)='onSubmit(stock)'>
+            {{stock.ticker}} | {{stock.companyName}}
+            </mat-option>
+        </mat-autocomplete>
     </form>
+
+    
 </div>

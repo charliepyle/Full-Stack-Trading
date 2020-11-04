@@ -23,11 +23,35 @@
         </div>
         <div class="row">
             <div class="col-sm">
-                <button>Buy</button>
+                <button (click)="modalOpen(content)">Buy</button>
             </div>
             <div class="col-sm text-right"></div>
         </div>
     </div>
+
+    <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">{{stock.ticker}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div>
+              <label for="quantity">Current Price: {{mostRecentPrice}} </label>
+              <div class="input-group">
+                <label class='inline'>Quantity <input type="number" id="quantity" name="quantity" (change)="updateTotalPrice($event.target.value)"></label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <h4 class="total-price mr-auto">Total Price: {{totalPrice}}</h4>
+            <button type="button" class="btn btn-outline-dark" (click)="modalClose(); modal.close('Save click')">Buy</button>
+        </div>
+    </ng-template>
+
     <p *ngIf='open' style='text-align: center'>Market is Open</p>
     <p *ngIf='closed' style='text-align: center'>Market closed on {{stock.date}}</p>
     <div class="container">
