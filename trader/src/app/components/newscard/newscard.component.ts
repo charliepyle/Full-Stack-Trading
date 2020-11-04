@@ -1,5 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NewsItem } from '../../models/NewsItem';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { library } from '@fortawesome/fontawesome-svg-core';
+// import { faFacebookF } from '@fortawesome/free-brands-svg-icons/faFacebook';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+// import { fa-twitter } 
 
 @Component({
   selector: 'app-newscard',
@@ -9,15 +14,25 @@ import { NewsItem } from '../../models/NewsItem';
 export class NewscardComponent implements OnInit {
   @Input() newsItem: NewsItem;
   innerhtml: string;
-  constructor() { }
+  tweetString: string;
+  constructor(private modalService: NgbModal) { }
+
+  modalOpen(content) {
+    this.modalService.open(content, {backdropClass: 'light-blue-backdrop', ariaLabelledBy: 'modal-basic-title'}).result.then(result => {
+      console.log(result)
+    }).catch(e => console.log(e));
+  }
 
   ngOnInit(): void {
+    library.add(faTwitter);
     if (this.newsItem.source == null) {
       this.innerhtml = this.newsItem.description;
     }
     else {
       this.innerhtml = this.newsItem.source + ": " + this.newsItem.description;
     }
+    this.tweetString = "https://twitter.com/intent/tweet?text=" + this.newsItem.title + ": " + this.newsItem.url;
+    console.log(this.tweetString);
   }
 
 }

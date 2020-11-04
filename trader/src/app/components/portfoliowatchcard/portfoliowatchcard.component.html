@@ -12,7 +12,7 @@
                 <mat-card-content>Change:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.lastPrice}}</mat-card-content>
+                <mat-card-content>{{stockItem.change}}</mat-card-content>
             </div>
         </div>
         <div class="row">
@@ -20,7 +20,7 @@
                 <mat-card-content>Avg. Cost / Share:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.quantity}}</mat-card-content>
+                <mat-card-content>{{costPerShare}}</mat-card-content>
             </div>
             <div class="col text-left">
                 <mat-card-content>Current Price:</mat-card-content>
@@ -34,13 +34,13 @@
                 <mat-card-content>Total Cost:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.change}}({{stockItem.changePercent}})</mat-card-content>
+                <mat-card-content>{{stockItem.totalCost}}</mat-card-content>
             </div>
             <div class="col text-left">
                 <mat-card-content>Market Value:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.change}}({{stockItem.changePercent}})</mat-card-content>
+                <mat-card-content>{{marketValue}}</mat-card-content>
             </div>
         </div>
         <div class="row">
@@ -68,8 +68,8 @@
           </form>
         </div>
         <div class="modal-footer">
-            <h4 class="total-price mr-auto">Total Price: {{stockItem.totalCost}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="modalClose(); modal.close('Save click')">Buy</button>
+            <h4 class="total-price mr-auto">Total Price: {{tempTotalPrice}}</h4>
+            <button type="button" class="btn btn-outline-dark" (click)="buyModalClose(); modal.close('Save click')">Buy</button>
         </div>
     </ng-template>
 
@@ -91,8 +91,8 @@
           </form>
         </div>
         <div class="modal-footer">
-            <h4 class="total-price mr-auto">Total Price: {{stockItem.totalCost}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="modalClose(); modal.close('Save click')">Sell</button>
+            <h4 class="total-price mr-auto">Total Price: {{tempTotalPrice}}</h4>
+            <button type="button" class="btn btn-outline-dark" (click)="sellModalClose(); modal.close('Save click')">Sell</button>
         </div>
     </ng-template>
 </div>

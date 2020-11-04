@@ -12,6 +12,8 @@ export class PortfoliowatchcardComponent implements OnInit {
   @Input() stockItem: StockWatchItem;
   tempTotalPrice: number;
   tempQuantity: number;
+  marketValue: number;
+  costPerShare: number;
   constructor(private router: Router, private modalService: NgbModal) { }
 
   redirect() {
@@ -24,6 +26,24 @@ export class PortfoliowatchcardComponent implements OnInit {
     }).catch(e => console.log(e));
   }
 
+  buyModalClose() {
+    let priceToAdd = this.stockItem.lastPrice * this.tempQuantity;
+    this.stockItem.quantity += this.tempQuantity;
+    this.stockItem.totalCost += priceToAdd;
+    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
+    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
+  }
+
+  sellModalClose() {
+    let priceToRemove = this.costPerShare * this.tempQuantity;
+    this.stockItem.quantity -= this.tempQuantity;
+    this.stockItem.totalCost -= priceToRemove;
+    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
+    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
+  }
+
+  
+
   updateTotalPrice(quantity) {
     // console.log(this.mostRecentPrice);
     // console.log(quantity);
@@ -33,6 +53,8 @@ export class PortfoliowatchcardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.marketValue = this.stockItem.quantity * this.stockItem.lastPrice;
+    this.costPerShare = this.stockItem.totalCost/this.stockItem.quantity;
   }
 
 }
