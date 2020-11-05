@@ -1,27 +1,26 @@
-html {
+/* html {
     position: relative;
     min-height: 100%;
 }
 
 body {
     margin-bottom: 80px;
-}
+} */
 
 .footer {
-    position: absolute;
     height: 80px;
     bottom: 0;
     line-height: 80px;
     background-color: lightgray;
     width: 100%;
-    
+    position: absolute;
 }
 
-.container {
+/* .container {
     width: auto;
     max-width: 600px;
     padding: 0 15px;
-}
+} */
 
 p {
     text-align: center;

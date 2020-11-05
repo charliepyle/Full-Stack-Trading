@@ -15,6 +15,8 @@ export class NewscardComponent implements OnInit {
   @Input() newsItem: NewsItem;
   innerhtml: string;
   tweetString: string;
+  formattedDate: string;
+  innerDescription: string;
   constructor(private modalService: NgbModal) { }
 
   modalOpen(content) {
@@ -34,11 +36,20 @@ export class NewscardComponent implements OnInit {
   ngOnInit(): void {
     library.add(faTwitter);
     if (this.newsItem.source == null) {
-      this.innerhtml = this.newsItem.description;
+      this.innerhtml = this.newsItem.title;
     }
     else {
-      this.innerhtml = this.newsItem.source + ": " + this.newsItem.description;
+      this.innerhtml = this.newsItem.source + ": " + this.newsItem.title;
     }
+    this.innerDescription = this.newsItem.description;
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+    ];
+
+    const d = new Date(this.newsItem.publishedAt);
+    const month = monthNames[d.getMonth()];
+
+    this.formattedDate = month + " " + d.getDate() + ", " + d.getFullYear();
   }
 
 }

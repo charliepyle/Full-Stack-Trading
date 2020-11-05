@@ -10,11 +10,4 @@ import * as Highcharts from 'highcharts';
 
 export class AppComponent {
   title = 'trader';
-  // Highcharts: typeof Highcharts = Highcharts;
-  // chartOptions: Highcharts.Options = {
-  //   series: [{
-  //     data: [1, 2, 3],
-  //     type: 'line'
-  //   }]
-  // };
 }

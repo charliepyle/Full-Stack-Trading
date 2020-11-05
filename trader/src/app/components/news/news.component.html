@@ -1,4 +1,4 @@
 <div class="card-container" *ngFor='let newsItem of news; index as i'>
-    <app-newscard *ngIf='inBounds(news, i)'[newsItem]='news[2*i]'></app-newscard>
-    <app-newscard *ngIf='inBounds(news, i)' [newsItem]='news[(2*i)+1]'></app-newscard>
+    <app-newscard class='newsCard' *ngIf='inBounds(news, i)'[newsItem]='news[2*i]'></app-newscard>
+    <app-newscard class='newsCard' *ngIf='inBounds(news, i)' [newsItem]='news[(2*i)+1]'></app-newscard>
 </div>

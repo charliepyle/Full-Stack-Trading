@@ -1,49 +1,35 @@
 <div>
     <mat-card role='button' (click)='modalOpen(content)' class='newsCard'>
-        <img mat-card-image [src]="newsItem.urlToImage" alt='photo'>
-        <mat-card-content [innerHtml]="innerhtml"></mat-card-content>
+        <img mat-card-image class='newsImage' [src]="newsItem.urlToImage" alt='photo'>
+        <mat-card-content class='newsText' [innerHtml]="innerhtml"></mat-card-content>
     </mat-card>
 
     <ng-template #content let-modal>
-        <div class="modal-header">
-          <h2 class="modal-title" id="modal-basic-title">{{newsItem.source}}</h2>
-          <h4 class="modal-date" id="modal-basic-date">{{newsItem.publishedAt}}</h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-header" style='display:block'>
+            <h1 style='display: inline' class="modal-title" id="modal-basic-title">{{newsItem.source}}</h1>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="pl-2 modal-date" id="modal-basic-date"><span style='color: grey'>{{formattedDate}}</span></h4>
+            
+                
+            
         </div>
         <div class="modal-body">
-          <h3><b>{{newsItem.title}}</b></h3>
-          <h4 [innerHtml]="innerhtml"></h4>
-          <h4>For more details click <a ng-href="{{newsItem.url}}"></a></h4>
-            <!-- <form>
-            <div>
-              <label for="quantity">Current Price: </label>
-              <div class="input-group">
-                <label class='inline'>Quantity <input type="number" id="quantity" name="quantity" (change)="updateTotalPrice($event.target.value)"></label>
-              </div>
-            </div>
-          </form> -->
+          <h2><b>{{newsItem.title}}</b></h2>
+          <h4 [innerHtml]="innerDescription"></h4>
+          <span style='color: grey'><h4>For more details click <a [attr.href]="newsItem.url">here</a></h4></span>
             <mat-card>
             <h3>Share</h3>
             <h3>
                 <a class="twitter-share-button"
                 [href]="getTwitterURL()">
-                <i class="fab fa-twitter"></i></a>
+                <i style='font-size: 3em' class="fab fa-twitter"></i></a>
                 <a class="facebook-share-button"
                 [href]="getFacebookURL()">
-                <i class="fab fa-facebook"></i></a>
-
-                <!-- <fa-icon [icon]="['fab', 'twitter']"></fa-icon></a>
-                <a class="facebook-share-button"
-                ng-href="{{tweetString}}">
-                <fa-icon [icon]="['fab', 'facebook']"></fa-icon></a> -->
+                <i style='font-size: 3em' class="fab fa-facebook"></i></a>
             </h3>
             </mat-card>
         </div>
-        <!-- <div class="modal-footer">
-            <h4 class="total-price mr-auto">Total Price: </h4>
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Buy</button>
-        </div> -->
     </ng-template>
 </div>

@@ -1,3 +1,19 @@
 .container {
     width: 80%;
 }
+
+.footer {
+    height: 80px;
+    bottom: 0;
+    line-height: 80px;
+    background-color: lightgray;
+    width: 100%;
+    position: sticky;
+    margin: 0;
+}
+
+.footer-p {
+    text-align: center;
+    color: gray; 
+    margin: 0;
+}
