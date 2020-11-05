@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>My Watchlist</h1>
+    <h1><b>My Watchlist</b></h1>
     <div *ngFor='let stockWatch of stocks'>
         <app-stockwatchcard [stockItem]='stockWatch' (deleteStockItem)="deleteStockItem($event)"></app-stockwatchcard>
     </div>

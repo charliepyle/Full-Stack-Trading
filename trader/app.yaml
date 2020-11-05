@@ -1,0 +1,7 @@
+runtime: nodejs12
+handlers:
+- url: /
+  static_files: trader/index.html
+  upload: trader/index.html
+- url: /
+  static_dir: trader

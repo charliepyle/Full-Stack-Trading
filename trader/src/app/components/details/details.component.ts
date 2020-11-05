@@ -33,12 +33,12 @@ export class DetailsComponent implements OnInit {
 
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
   constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { 
-    console.log(this.notFoundStocks)
-    const intervalDuration = 15000;
-    this.refreshSubscription = interval(intervalDuration).subscribe(result => {
-      this.refreshMarket();
-      this.applyStyles();
-    })
+    // console.log(this.notFoundStocks)
+    // const intervalDuration = 15000;
+    // this.refreshSubscription = interval(intervalDuration).subscribe(result => {
+    //   this.refreshMarket();
+    //   this.applyStyles();
+    // })
     
   }
 

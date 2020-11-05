@@ -6,3 +6,7 @@
     height: 100%;
     width: 80%;
 }
+
+h1, h3 {
+    margin: 0;
+}

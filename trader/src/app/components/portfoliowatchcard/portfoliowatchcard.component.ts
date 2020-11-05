@@ -25,7 +25,7 @@ export class PortfoliowatchcardComponent implements OnInit {
   }
 
   modalOpen(content) {
-    this.modalService.open(content, {backdropClass: 'light-blue-backdrop', ariaLabelledBy: 'modal-basic-title'}).result.then(result => {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then(result => {
       console.log(result)
     }).catch(e => console.log(e));
   }
@@ -37,7 +37,7 @@ export class PortfoliowatchcardComponent implements OnInit {
     this.stockItem.totalCost += priceToAdd;
     this.costPerShare =  Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
     this.marketValue =  Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
-    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
+    this.change = Number((this.stockItem.lastPrice - this.costPerShare).toFixed(2));
 
     let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
     storedStock.quantity = this.stockItem.quantity;
@@ -53,7 +53,7 @@ export class PortfoliowatchcardComponent implements OnInit {
     this.stockItem.totalCost -= priceToRemove;
     this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
     this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
-    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
+    this.change = Number((this.stockItem.lastPrice - this.costPerShare).toFixed(2));
 
 
     let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
@@ -76,21 +76,22 @@ export class PortfoliowatchcardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.stockItem.lastPrice = Number(this.stockItem.lastPrice.toFixed(2))
     this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
     this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
-    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
+    this.change = Number((this.stockItem.lastPrice - this.costPerShare).toFixed(2));
 
   }
 
   applyStyles() {
     let color;
-    if (this.stockItem.change > 0) {
+    if (this.change > 0) {
       color = 'green';
       this.positiveChange = true;
       this.negativeChange = false;
     }
-    else if (this.stockItem.change == 0) {
+    else if (this.change == 0) {
       color = 'black';
       this.positiveChange = false;
       this.negativeChange = false;

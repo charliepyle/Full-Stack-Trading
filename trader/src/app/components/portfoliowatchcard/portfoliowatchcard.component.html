@@ -1,6 +1,12 @@
-<div role='button'>
-    <mat-card (click)='redirect();' class='stockWatchCard'>
-        <!-- <img mat-card-image [src]="newsItem.urlToImage" alt='photo'> -->
+<div class='card-container' (click)='redirect();' role='button'>
+    <div class="grey-wrapper">
+        <h1><b>{{stockItem.ticker}} <span class='item-span'>{{stockItem.companyName}}</span></b></h1>
+    </div>
+    <mat-card class='stockWatchCard'>
+        <!-- <mat-card-header class='header'>
+            test header
+        </mat-card-header> -->
+       
         <div class="row">
             <div class="col text-left">
                 <mat-card-content>Quantity:</mat-card-content>
@@ -20,7 +26,7 @@
                         <svg width="1em" *ngIf='negativeChange' height="1em" viewBox="0 0 16 16" class="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                         </svg>
-                        {{stockItem.change}}
+                        {{change}}
                     </span>
                 </mat-card-content>
             </div>
@@ -53,13 +59,18 @@
                 <mat-card-content><span [ngStyle]="applyStyles()">{{marketValue}}</span></mat-card-content>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class='col'>
-                <button type="button" class="btn btn-danger float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(sellContent)">Sell</button>
-                <button type="button" class="btn btn-primary float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(buyContent)">Buy</button>
+                
             </div>  
-        </div>
+        </div> -->
     </mat-card>
+    <div class="grey-wrapper text-right">
+        <!-- <h1><b>{{stockItem.ticker}} <span class='item-span'>{{stockItem.companyName}}</span></b></h1> -->
+        <button type="button" class="buy-btn btn btn-primary d-inline mb-2 mt-2 mr-3" (click)=" $event.stopPropagation(); modalOpen(buyContent)">Buy</button>
+        <button type="button" class="sell-btn btn btn-danger d-inline mb-2 mr-3 mt-2 " (click)=" $event.stopPropagation(); modalOpen(sellContent)">Sell</button>
+    </div>
+
     <ng-template #buyContent let-modal>
         <div class="modal-header">
           <h4 class="modal-title" id="modal-basic-title">{{stockItem.ticker}}</h4>
