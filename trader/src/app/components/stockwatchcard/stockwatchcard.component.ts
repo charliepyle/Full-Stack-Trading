@@ -11,6 +11,8 @@ import { StockWatchItem } from 'src/app/models/StockWatchItem';
 export class StockwatchcardComponent implements OnInit {
   @Input() stockItem: StockWatchItem;
   @Output() deleteStockItem: EventEmitter<StockWatchItem> = new EventEmitter();
+  positiveChange: boolean;
+  negativeChange: boolean;
   constructor(private router: Router) { }
 
   redirect() {
@@ -26,6 +28,30 @@ export class StockwatchcardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  applyStyles() {
+    let color;
+    if (this.stockItem.change > 0) {
+      color = 'green';
+      this.positiveChange = true;
+      this.negativeChange = false;
+    }
+    else if (this.stockItem.change == 0) {
+      color = 'black';
+      this.positiveChange = false;
+      this.negativeChange = false;
+    }
+    else {
+      color = 'red';
+      this.positiveChange = false;
+      this.negativeChange = true;
+    }
+
+
+
+    const styles = {'color': color};
+    return styles;
   }
 
 }

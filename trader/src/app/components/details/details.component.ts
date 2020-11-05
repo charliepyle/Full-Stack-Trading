@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { NewsItem } from '../../models/NewsItem';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { interval, Subscription } from 'rxjs'
+import { utf8Encode } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-details',
@@ -23,21 +24,92 @@ export class DetailsComponent implements OnInit {
   quantity: number;
   totalPrice: number;
   mostRecentPrice: number;
+  positiveChange: boolean;
+  negativeChange: boolean;
+  currentDateTime: string;
+  formattedStockDate: string;
+
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
   constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { 
     const intervalDuration = 15000;
     this.refreshSubscription = interval(intervalDuration).subscribe(result => {
       this.refreshMarket();
+      this.applyStyles();
     })
   }
 
   ngOnInit(): void {
-    this.refreshMarket()
+    this.refreshMarket();
+    this.applyStyles();
+  }
+
+  setDates() {
+    let currentDate = new Date();
+    let currentUTCDate = new Date(currentDate.toUTCString());
+
+    let month = String(currentUTCDate.getMonth()+1)
+    let date = String(currentUTCDate.getDate());
+    let hours = String(currentUTCDate.getHours());
+    let minutes = String(currentUTCDate.getMinutes());
+    let seconds = String(currentUTCDate.getSeconds());
+
+    if (Number(month) <= 9) {
+      month = String("0" + month)
+    }
+
+    if (Number(date) <= 9) {
+      date = String("0" + date)
+    }
+    if (Number(hours) <= 9) {
+      hours = String("0" + hours)
+    }
+    if (Number(minutes) <= 9) {
+      minutes = String("0" + minutes)
+    }
+    if (Number(seconds) <= 9) {
+      seconds = String("0" + seconds)
+    }
+
+    this.currentDateTime = currentUTCDate.getFullYear() + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+    
+    let stockDate = new Date(this.stock.date);
+    console.log(this.stock.date);
+    console.log(stockDate)
+    let currentStockUTCDate = new Date(stockDate.toUTCString());
+
+    month = String(currentStockUTCDate.getMonth()+1)
+    date = String(currentStockUTCDate.getDate());
+    hours = String(currentStockUTCDate.getHours());
+    minutes = String(currentStockUTCDate.getMinutes());
+    seconds = String(currentStockUTCDate.getSeconds());
+
+    if (Number(month) <= 9) {
+      month = String("0" + month)
+    }
+
+    if (Number(date) <= 9) {
+      date = String("0" + date)
+    }
+
+    if (Number(hours) <= 9) {
+      hours = String("0" + hours)
+    }
+    if (Number(minutes) <= 9) {
+      minutes = String("0" + minutes)
+    }
+    if (Number(seconds) <= 9) {
+      seconds = String("0" + seconds)
+    }
+
+
+    this.formattedStockDate = currentStockUTCDate.getFullYear() + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+    
   }
 
   refreshMarket() {
     this.searchService.getStock(this.ticker).subscribe(stock => {
       this.stock = stock;
+      this.setDates()
       const storedStock = JSON.parse(localStorage.getItem(this.stock.ticker));
       console.log(this.stock);
       if (storedStock != null && storedStock.tracking == true) {
@@ -65,6 +137,9 @@ export class DetailsComponent implements OnInit {
         this.closed = false;
         this.mostRecentPrice = Number(this.stock.lastPrice);
       }
+
+      
+
     })
   }
 
@@ -137,6 +212,30 @@ export class DetailsComponent implements OnInit {
 
   ngOnDestroy() {
     this.refreshSubscription.unsubscribe();
+  }
+
+  applyStyles() {
+    let color;
+    if (this.stock.change > 0) {
+      color = 'green';
+      this.positiveChange = true;
+      this.negativeChange = false;
+    }
+    else if (this.stock.change == 0) {
+      color = 'black';
+      this.positiveChange = false;
+      this.negativeChange = false;
+    }
+    else {
+      color = 'red';
+      this.positiveChange = false;
+      this.negativeChange = true;
+    }
+
+
+
+    const styles = {'color': color};
+    return styles;
   }
 
 }

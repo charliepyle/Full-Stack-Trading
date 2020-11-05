@@ -9,6 +9,7 @@ import { StockWatchItem } from 'src/app/models/StockWatchItem';
 export class WatchlistComponent implements OnInit {
 
   stocks: StockWatchItem[];
+  noStocks: boolean
   constructor() { }
 
   ngOnInit(): void {
@@ -19,6 +20,12 @@ export class WatchlistComponent implements OnInit {
         this.stocks.push(objReturned);
       }
     }
+    if (this.stocks === undefined || this.stocks.length == 0) {
+      this.noStocks = true;
+    }
+    else {
+      this.noStocks = false;
+    }
     console.log(this.stocks);
   }
 
@@ -26,6 +33,12 @@ export class WatchlistComponent implements OnInit {
     for (let i = 0; i < this.stocks.length; i++) {
       if (this.stocks[i].ticker === stock.ticker) {
         this.stocks.splice(i, 1);
+        if (this.stocks === undefined || this.stocks.length == 0) {
+          this.noStocks = true;
+        }
+        else {
+          this.noStocks = false;
+        }
         break;
       }
     }

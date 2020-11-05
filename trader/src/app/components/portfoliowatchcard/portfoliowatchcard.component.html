@@ -1,5 +1,5 @@
-<div>
-    <mat-card class='stockWatchCard'>
+<div role='button'>
+    <mat-card (click)='redirect();' class='stockWatchCard'>
         <!-- <img mat-card-image [src]="newsItem.urlToImage" alt='photo'> -->
         <div class="row">
             <div class="col text-left">
@@ -12,7 +12,17 @@
                 <mat-card-content>Change:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.change}}</mat-card-content>
+                <mat-card-content>
+                    <span [ngStyle]="applyStyles()">
+                        <svg width="1em" *ngIf='positiveChange' height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                        </svg>
+                        <svg width="1em" *ngIf='negativeChange' height="1em" viewBox="0 0 16 16" class="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                        {{stockItem.change}}
+                    </span>
+                </mat-card-content>
             </div>
         </div>
         <div class="row">
@@ -26,7 +36,7 @@
                 <mat-card-content>Current Price:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{stockItem.lastPrice}}</mat-card-content>
+                <mat-card-content><span [ngStyle]="applyStyles()">{{stockItem.lastPrice}}</span></mat-card-content>
             </div>
         </div>
         <div class="row">
@@ -40,13 +50,13 @@
                 <mat-card-content>Market Value:</mat-card-content>
             </div>
             <div class="col text-right">
-                <mat-card-content>{{marketValue}}</mat-card-content>
+                <mat-card-content><span [ngStyle]="applyStyles()">{{marketValue}}</span></mat-card-content>
             </div>
         </div>
         <div class="row">
             <div class='col'>
-                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)="modalOpen(sellContent)">Sell</button>
-                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)="modalOpen(buyContent)">Buy</button>
+                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(sellContent)">Sell</button>
+                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(buyContent)">Buy</button>
             </div>  
         </div>
     </mat-card>
@@ -69,7 +79,7 @@
         </div>
         <div class="modal-footer">
             <h4 class="total-price mr-auto">Total Price: {{tempTotalPrice}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="buyModalClose(); modal.close('Save click')">Buy</button>
+            <button type="button" class="btn btn-outline-dark" (click)="$event.stopPropagation(); buyModalClose(); modal.close('Save click')">Buy</button>
         </div>
     </ng-template>
 

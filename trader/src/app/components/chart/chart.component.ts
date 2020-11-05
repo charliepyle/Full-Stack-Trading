@@ -43,6 +43,18 @@ export class ChartComponent implements OnInit {
     let stockClose;
     let stockVolume;
 
+    let color;
+
+    if (this.stock.change > 0) {
+      color = 'green'
+    }
+    else if (this.stock.change == 0) {
+      color = 'black'
+    }
+    else {
+      color = 'red'
+    }
+
     if (this.historical) {
       stockClose = this.stock.historicalStockClose;
       stockVolume = this.stock.historicalStockVolume;
@@ -215,9 +227,7 @@ export class ChartComponent implements OnInit {
       stockClose = this.stock.lastDayStockClose;
       stockVolume = this.stock.lastDayStockVolume;
       this.chartOptions = {
-        // chart: {
-        //   height: 600,
-        // },
+
     
         title: {
           text: this.stock.ticker
@@ -227,14 +237,36 @@ export class ChartComponent implements OnInit {
           enabled: false,
         },
 
+        xAxis: {
+          range: 1000 * 3600 * 24,
+          minTickInterval: 1
+        },
+
 
         tooltip: {
           split: true
+        },
+
+        navigator: {
+    
+          series: {
+              fillOpacity: 2,
+              color: color,
+              data: stockClose
+          }
         },
         series: [{
           name: this.stock.ticker,
           type: 'line',
           data: stockClose,
+          color: color
+          // fillColor: {
+          //   linearGradient: [0, 0, 0, 300],
+          //       stops: [
+          //           [0, Highcharts.getOptions().colors[0]],
+          //           [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+          //       ]
+          // }
         } 
         ],
   

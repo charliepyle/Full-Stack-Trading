@@ -15,6 +15,9 @@ export class PortfoliowatchcardComponent implements OnInit {
   tempQuantity: number;
   marketValue: number;
   costPerShare: number;
+  change: number;
+  positiveChange: boolean;
+  negativeChange: boolean;
   constructor(private router: Router, private modalService: NgbModal) { }
 
   redirect() {
@@ -34,6 +37,7 @@ export class PortfoliowatchcardComponent implements OnInit {
     this.stockItem.totalCost += priceToAdd;
     this.costPerShare =  Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
     this.marketValue =  Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
+    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
 
     let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
     storedStock.quantity = this.stockItem.quantity;
@@ -49,6 +53,8 @@ export class PortfoliowatchcardComponent implements OnInit {
     this.stockItem.totalCost -= priceToRemove;
     this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
     this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
+    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
+
 
     let storedStock = JSON.parse(localStorage.getItem(this.stockItem.ticker));
     storedStock.quantity = this.stockItem.quantity;
@@ -64,8 +70,6 @@ export class PortfoliowatchcardComponent implements OnInit {
   
 
   updateTotalPrice(quantity) {
-    // console.log(this.mostRecentPrice);
-    // console.log(quantity);
 
     this.tempTotalPrice= Number((this.stockItem.lastPrice * Number(quantity)).toFixed(2));
     this.tempQuantity = Number(quantity);
@@ -75,7 +79,34 @@ export class PortfoliowatchcardComponent implements OnInit {
     this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.marketValue = Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
     this.costPerShare = Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
+    this.change = Number((this.costPerShare - this.stockItem.lastPrice).toFixed(2));
 
   }
+
+  applyStyles() {
+    let color;
+    if (this.stockItem.change > 0) {
+      color = 'green';
+      this.positiveChange = true;
+      this.negativeChange = false;
+    }
+    else if (this.stockItem.change == 0) {
+      color = 'black';
+      this.positiveChange = false;
+      this.negativeChange = false;
+    }
+    else {
+      color = 'red';
+      this.positiveChange = false;
+      this.negativeChange = true;
+    }
+
+
+
+    const styles = {'color': color};
+    return styles;
+  }
+
+  
 
 }

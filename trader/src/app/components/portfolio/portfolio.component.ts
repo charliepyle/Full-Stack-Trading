@@ -10,6 +10,7 @@ import { SearchService } from '../../services/search.service';
 export class PortfolioComponent implements OnInit {
 
   stocks: StockWatchItem[];
+  noStocks: boolean;
   constructor(private searchService:SearchService) { }
 
   ngOnInit(): void {
@@ -25,6 +26,13 @@ export class PortfolioComponent implements OnInit {
       }
     }
 
+    if (stockTickers === undefined || stockTickers.length == 0) {
+      this.noStocks = true;
+    }
+    else {
+      this.noStocks = false;
+    }
+
     let stockString = "";
     for (const stock of stockTickers) {
       stockString += stock.ticker + ","
@@ -38,6 +46,7 @@ export class PortfolioComponent implements OnInit {
         localStorage.setItem(stock.ticker, JSON.stringify(storedStock));
         this.stocks.push(storedStock);
       }
+      
 
       console.log(this.stocks);
     }) 
@@ -48,6 +57,12 @@ export class PortfolioComponent implements OnInit {
     for (let i = 0; i < this.stocks.length; i++) {
       if (this.stocks[i].ticker === stock.ticker) {
         this.stocks.splice(i, 1);
+        if (this.stocks === undefined || this.stocks.length == 0) {
+          this.noStocks = true;
+        }
+        else {
+          this.noStocks = false;
+        }
         break;
       }
     }
