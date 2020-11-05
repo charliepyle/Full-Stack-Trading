@@ -1,0 +1,36 @@
+a {
+    color: white;
+}
+.navbar {
+    background-color: #7c4dff;
+
+}
+
+ul {
+    display: flex;
+    padding: 5px;
+}
+
+ul > li {
+    margin: 5px;
+    /* padding: 10px; */
+    padding-right: 10px;
+    padding-left: 20px;
+    margin-left: 10px;
+}
+
+a:hover {
+    border: 1px solid white;
+    /* box-sizing: border-box; */
+    border-radius: 20%;     
+}
+
+
+
+/* .navbar-nav {
+    padding-right: 10%;
+}
+
+.nav-item {
+    padding-left: 25%;
+} */

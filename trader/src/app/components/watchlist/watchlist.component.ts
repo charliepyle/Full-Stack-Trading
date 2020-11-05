@@ -9,7 +9,7 @@ import { StockWatchItem } from 'src/app/models/StockWatchItem';
 export class WatchlistComponent implements OnInit {
 
   stocks: StockWatchItem[];
-  noStocks: boolean
+  noStocks: boolean;
   constructor() { }
 
   ngOnInit(): void {

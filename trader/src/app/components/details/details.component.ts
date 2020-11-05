@@ -28,17 +28,22 @@ export class DetailsComponent implements OnInit {
   negativeChange: boolean;
   currentDateTime: string;
   formattedStockDate: string;
+  stockReturned: boolean;
+  notFoundStocks: boolean = true;
 
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
   constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { 
+    console.log(this.notFoundStocks)
     const intervalDuration = 15000;
     this.refreshSubscription = interval(intervalDuration).subscribe(result => {
       this.refreshMarket();
       this.applyStyles();
     })
+    
   }
 
   ngOnInit(): void {
+    console.log(this.notFoundStocks)
     this.refreshMarket();
     this.applyStyles();
   }
@@ -73,8 +78,6 @@ export class DetailsComponent implements OnInit {
     this.currentDateTime = currentUTCDate.getFullYear() + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
     
     let stockDate = new Date(this.stock.date);
-    console.log(this.stock.date);
-    console.log(stockDate)
     let currentStockUTCDate = new Date(stockDate.toUTCString());
 
     month = String(currentStockUTCDate.getMonth()+1)
@@ -106,12 +109,19 @@ export class DetailsComponent implements OnInit {
     
   }
 
+  checkStock() {
+    if (this.stock == undefined || this.stock == null) {
+      return true
+    }
+    return false;
+  }
+
   refreshMarket() {
     this.searchService.getStock(this.ticker).subscribe(stock => {
+      this.notFoundStocks = false
       this.stock = stock;
       this.setDates()
       const storedStock = JSON.parse(localStorage.getItem(this.stock.ticker));
-      console.log(this.stock);
       if (storedStock != null && storedStock.tracking == true) {
         this.stockSaved = true; 
         this.notStockSaved = false;
@@ -140,7 +150,8 @@ export class DetailsComponent implements OnInit {
 
       
 
-    })
+    }, err => { console.log(err); this.notFoundStocks = true});
+
   }
 
   modalOpen(content) {
@@ -176,6 +187,7 @@ export class DetailsComponent implements OnInit {
   updateTotalPrice(quantity) {
     this.totalPrice = Number((this.mostRecentPrice * Number(quantity)).toFixed(2));
     this.quantity = Number(quantity);
+    // console.log('clicked?')
   }
 
   stockSave() {

@@ -1,5 +1,11 @@
 <div class="group-container">
+    <div class='container'>
+        <div *ngIf='notFoundStocks' class="alert alert-danger"  role="alert">
+            <p class="text-center">No results found. Please enter valid ticker.</p>
+        </div>
+    </div>
     <div class="container">
+
         <div class="row">
             <div class="col-sm">
                 {{stock.ticker}}
@@ -33,7 +39,7 @@
         </div>
         <div class="row">
             <div class="col-sm">
-                <button (click)="modalOpen(content)">Buy</button>
+                <button class="btn btn-success"  *ngIf="notFoundStocks==false" (click)="modalOpen(content)">Buy</button>
             </div>
             <div class="col-sm text-right"></div>
         </div>
@@ -58,7 +64,7 @@
         </div>
         <div class="modal-footer">
             <h4 class="total-price mr-auto">Total Price: {{totalPrice}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="modalClose(); modal.close('Save click')">Buy</button>
+            <button type="button" class="btn btn-success" [disabled]="quantity === undefined || quantity < 0 || quantity == 0" (click)="modalClose(); modal.close('Save click')">Buy</button>
         </div>
     </ng-template>
 
@@ -72,7 +78,8 @@
         </mat-tab-group>
     </div>
     
-
+    
 </div>
+
 
 

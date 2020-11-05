@@ -1,6 +1,6 @@
 <div class="container">
     <h1>My Watchlist</h1>
-    <div class="card-container" *ngFor='let stockWatch of stocks'>
+    <div *ngFor='let stockWatch of stocks'>
         <app-stockwatchcard [stockItem]='stockWatch' (deleteStockItem)="deleteStockItem($event)"></app-stockwatchcard>
     </div>
     <div *ngIf='noStocks' class="alert alert-warning" role="alert">

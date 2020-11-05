@@ -274,7 +274,7 @@ app.get('/details/:ticker', function (req, res) {
       return res.send(to_return)
 
 
-    }).catch(e => console.log(e));
+    }).catch(e => {return e});
   })
 
 app.listen(port, () => {

@@ -14,7 +14,6 @@ export class SearchService {
   constructor(private http:HttpClient) { }
 
   getStock(ticker:String):Observable<Stock> {
-    console.log(this.searchURL)
     return this.http.get<Stock>(`${this.searchURL}${ticker}`)
   }
 

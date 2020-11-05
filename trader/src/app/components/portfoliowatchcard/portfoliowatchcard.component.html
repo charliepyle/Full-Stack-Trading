@@ -55,8 +55,8 @@
         </div>
         <div class="row">
             <div class='col'>
-                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(sellContent)">Sell</button>
-                <button type="button" class="btn btn-outline-dark float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(buyContent)">Buy</button>
+                <button type="button" class="btn btn-danger float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(sellContent)">Sell</button>
+                <button type="button" class="btn btn-primary float-right mr-2" (click)=" $event.stopPropagation(); modalOpen(buyContent)">Buy</button>
             </div>  
         </div>
     </mat-card>
@@ -79,7 +79,7 @@
         </div>
         <div class="modal-footer">
             <h4 class="total-price mr-auto">Total Price: {{tempTotalPrice}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="$event.stopPropagation(); buyModalClose(); modal.close('Save click')">Buy</button>
+            <button type="button" class="btn btn-primary" [disabled]="tempQuantity === undefined || tempQuantity < 0 || tempQuantity == 0" (click)="$event.stopPropagation(); buyModalClose(); modal.close('Save click')">Buy</button>
         </div>
     </ng-template>
 
@@ -102,7 +102,7 @@
         </div>
         <div class="modal-footer">
             <h4 class="total-price mr-auto">Total Price: {{tempTotalPrice}}</h4>
-            <button type="button" class="btn btn-outline-dark" (click)="sellModalClose(); modal.close('Save click')">Sell</button>
+            <button type="button" class="btn btn-danger" [disabled]="tempQuantity === undefined || tempQuantity < 0 || tempQuantity == 0 || tempQuantity > stockItem.quantity" (click)="sellModalClose(); modal.close('Save click')">Sell</button>
         </div>
     </ng-template>
 </div>

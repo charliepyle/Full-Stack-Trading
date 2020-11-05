@@ -1,7 +1,28 @@
 .container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     flex-direction: column;
     height: 100%;
+}
+
+.title {
+    margin-top: 10%;
+    font-size: 4em
+}
+
+.form-class {
+    margin-top: 5%;
+    width: 30%;
+}
+
+.search-bar {
+    width: 100%;
+    border-radius: 25%;
+}
+
+.icon {
+    position: absolute;
+    padding-left: 18.5%;
+    padding-top: 0.25%;
 }

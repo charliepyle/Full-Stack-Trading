@@ -10,7 +10,7 @@ import { SearchService } from '../../services/search.service';
 export class PortfolioComponent implements OnInit {
 
   stocks: StockWatchItem[];
-  noStocks: boolean;
+  noStocks: boolean = true;
   constructor(private searchService:SearchService) { }
 
   ngOnInit(): void {
@@ -23,14 +23,8 @@ export class PortfolioComponent implements OnInit {
       console.log(objReturned);
       if (objReturned.ticker != null && objReturned.quantity != null && objReturned.quantity != 0) {
         stockTickers.push(objReturned);
+        this.noStocks = false;
       }
-    }
-
-    if (stockTickers === undefined || stockTickers.length == 0) {
-      this.noStocks = true;
-    }
-    else {
-      this.noStocks = false;
     }
 
     let stockString = "";
@@ -67,5 +61,7 @@ export class PortfolioComponent implements OnInit {
       }
     }
   }
+
+ 
 
 }
