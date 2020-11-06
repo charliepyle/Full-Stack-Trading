@@ -10,6 +10,7 @@ export class WatchlistComponent implements OnInit {
 
   stocks: StockWatchItem[];
   noStocks: boolean;
+  loading: boolean = true;
   constructor() { }
 
   ngOnInit(): void {
@@ -27,6 +28,7 @@ export class WatchlistComponent implements OnInit {
       this.noStocks = false;
     }
     console.log(this.stocks);
+    this.loading=false;
   }
 
   deleteStockItem(stock) {

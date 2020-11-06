@@ -1,32 +1,46 @@
 <div class='container'>
     <div class='item'>
-        <div class="row">
-            <div class="col-sm">High Price: {{stock.highPrice}}</div>
-            <div *ngIf="open" class="col-sm text-right">Mid Price: {{stock.midPrice}}</div> 
+        <div class="top-prices" style='padding: 5%;'>
+            <div class="row">
+                <div class="col-sm">High Price: {{stock.highPrice}}</div>
+                <div *ngIf="open" class="col-sm text-right">Mid Price: {{stock.midPrice}}</div> 
+            </div>
+            <div class="row">
+                <div class="col-sm">Low Price: {{stock.lowPrice}}</div>
+                <div *ngIf="open" class="col-sm text-right">Ask Price: {{stock.askPrice}}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Open Price: {{stock.openPrice}}</div>
+                <div *ngIf="open" class="col-sm text-right">Ask Size: {{stock.askSize}}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Prev. Close: {{stock.closePrice}}</div>
+                <div *ngIf="open" class="col-sm text-right">Bid Price: {{stock.bidPrice}}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Volume: {{stock.volume}}</div>
+                <div *ngIf="open" class="col-sm text-right">Bid Size: {{stock.bidSize}}</div>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-sm">Low Price: {{stock.lowPrice}}</div>
-            <div *ngIf="open" class="col-sm text-right">Ask Price: {{stock.askPrice}}</div>
+
+        <div class="centered" style='text-align: center'>
+            <h1>Company's Description</h1>
         </div>
-        <div class="row">
-            <div class="col-sm">Open Price: {{stock.openPrice}}</div>
-            <div *ngIf="open" class="col-sm text-right">Ask Size: {{stock.askSize}}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">Prev. Close: {{stock.closePrice}}</div>
-            <div *ngIf="open" class="col-sm text-right">Bid Price: {{stock.bidPrice}}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">Volume: {{stock.volume}}</div>
-            <div *ngIf="open" class="col-sm text-right">Bid Size: {{stock.bidSize}}</div>
-        </div>
+            
         <div class="row">
             Start Date: {{stock.startDate}}
         </div>
+        <br>
         <div class="row">
             {{stock.description}}
         </div>
     </div>
+    <!-- <div class='item'><highcharts-chart 
+    [Highcharts]="Highcharts" 
+    [constructorType]="'stockChart'" 
+    [options]="chartOptions"
+    style="width: 100%; height: 700px; display: block;">
+    </highcharts-chart></div> -->
     <div class='item'><app-chart [stock]='stock' [historical]='false'></app-chart></div>
 </div>
 <!-- 

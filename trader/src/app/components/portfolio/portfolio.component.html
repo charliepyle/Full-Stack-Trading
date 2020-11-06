@@ -1,3 +1,27 @@
+<div class='navbar-container'>
+    <nav class="navbar navbar-light justify-content-between">
+        <a class="navbar-brand" href="#"><span style="color:lightgray"><p>Stock Search</p></span></a>
+        <!-- Links -->
+        <ul class="navbar-nav list-group-horizontal ml-auto">
+            <li class="home nav-item">
+                <a class="nav-link" href="#"><span style="color:lightgray"><p>Search</p></span></a>
+            </li>
+            <li class="watchlist nav-item">
+                <a class="nav-link" href="/watchlist"><span style="color:lightgray"><p>Watchlist</p></span></a>
+            </li>
+            <li class="active portfolio nav-item">
+                <a class="nav-link" href="/portfolio"><span style="color:lightgray"><p>Portfolio</p></span></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<div *ngIf='loading' class="container d-flex justify-content-center align-items-center">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
 <div class="container">
     <h1><b>My Portfolio</b></h1>
     <div class="card-container" *ngFor='let stockWatch of stocks; index as i'>

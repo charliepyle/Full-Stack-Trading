@@ -24,6 +24,7 @@ import { NewscardComponent } from './components/newscard/newscard.component';
 import { ChartComponent } from './components/chart/chart.component';
 import { StockwatchcardComponent } from './components/stockwatchcard/stockwatchcard.component';
 import { PortfoliowatchcardComponent } from './components/portfoliowatchcard/portfoliowatchcard.component';
+import { SelfclosingalertComponent } from './components/selfclosingalert/selfclosingalert.component';
 
 
 
@@ -43,6 +44,7 @@ import { PortfoliowatchcardComponent } from './components/portfoliowatchcard/por
     ChartComponent,
     StockwatchcardComponent,
     PortfoliowatchcardComponent,
+    SelfclosingalertComponent,
   ],
   imports: [
     BrowserModule,

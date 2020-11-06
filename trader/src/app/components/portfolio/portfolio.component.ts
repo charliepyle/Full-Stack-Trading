@@ -11,6 +11,7 @@ export class PortfolioComponent implements OnInit {
 
   stocks: StockWatchItem[];
   noStocks: boolean = true;
+  loading: boolean = true;
   constructor(private searchService:SearchService) { }
 
   ngOnInit(): void {
@@ -41,7 +42,7 @@ export class PortfolioComponent implements OnInit {
         this.stocks.push(storedStock);
       }
       
-
+      this.loading=false;
       console.log(this.stocks);
     }) 
 

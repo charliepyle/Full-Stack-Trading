@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators';
 import {Stock} from '../models/Stock';
 
 @Injectable({
@@ -14,7 +15,9 @@ export class SearchService {
   constructor(private http:HttpClient) { }
 
   getStock(ticker:String):Observable<Stock> {
-    return this.http.get<Stock>(`${this.searchURL}${ticker}`)
+    // const response = this.http.get<Stock>(`${this.searchURL}${ticker}`).subscribe(result => console.log('result'), error => console.log('error'), () => console.log('here'));;
+    // console.log(response);
+    return this.http.get<Stock>(`${this.searchURL}${ticker}`).pipe(catchError(this.handleError));
   }
 
   getAutocomplete(ticker:String):Observable<Stock[]> {
@@ -22,5 +25,14 @@ export class SearchService {
   }
   getLatestPrices(ticker:String):Observable<Stock[]> {
     return this.http.get<Stock[]>(`${this.getLatestPricesURL}${ticker}`)
+  }
+
+  handleError(error: HttpErrorResponse) {
+    console.log('a;lsdkflkasd')
+    if (error.error instanceof ErrorEvent) {
+      console.error(error.error.message)
+    }
+    else console.error(error.error);
+    return throwError("error");
   }
 }

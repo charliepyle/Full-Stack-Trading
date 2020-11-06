@@ -30,20 +30,20 @@ export class DetailsComponent implements OnInit {
   formattedStockDate: string;
   stockReturned: boolean;
   notFoundStocks: boolean = true;
+  addedWatchlist: boolean = false;
+  removedWatchlist: boolean = false;
+  boughtSuccessfully: boolean = false;
+  loading: boolean = true;
 
   detailsUrl:string = `localhost:3000/details/${this.ticker}`
   constructor(private route: ActivatedRoute, private searchService:SearchService, private modalService: NgbModal) { 
-    // console.log(this.notFoundStocks)
-    // const intervalDuration = 15000;
-    // this.refreshSubscription = interval(intervalDuration).subscribe(result => {
-    //   this.refreshMarket();
-    //   this.applyStyles();
-    // })
+    
     
   }
 
   ngOnInit(): void {
     console.log(this.notFoundStocks)
+    this.loading = false;
     this.refreshMarket();
     this.applyStyles();
   }
@@ -118,6 +118,7 @@ export class DetailsComponent implements OnInit {
 
   refreshMarket() {
     this.searchService.getStock(this.ticker).subscribe(stock => {
+      console.log(stock)
       this.notFoundStocks = false
       this.stock = stock;
       this.setDates()
@@ -148,7 +149,14 @@ export class DetailsComponent implements OnInit {
         this.mostRecentPrice = Number(this.stock.lastPrice);
       }
 
-      
+      if (this.open) {
+            console.log(this.notFoundStocks)
+          const intervalDuration = 15000;
+          this.refreshSubscription = interval(intervalDuration).subscribe(result => {
+            this.refreshMarket();
+            this.applyStyles();
+        })
+      }
 
     }, err => { console.log(err); this.notFoundStocks = true});
 
@@ -175,6 +183,10 @@ export class DetailsComponent implements OnInit {
       };
 
       localStorage.setItem(this.stock.ticker, JSON.stringify(objectToStore));
+
+      this.boughtSuccessfully = true;
+
+      setTimeout(() => this.boughtSuccessfully = false, 5000);
 
     }
     else {
@@ -212,6 +224,10 @@ export class DetailsComponent implements OnInit {
       localStorage.setItem(this.stock.ticker, JSON.stringify(currentlyStored));
     }
 
+    this.addedWatchlist = true;
+
+    setTimeout(() => this.addedWatchlist = false, 5000);
+
 
   }
   stockUnsave() {
@@ -220,6 +236,12 @@ export class DetailsComponent implements OnInit {
     let currentlyStored = JSON.parse(localStorage.getItem(this.stock.ticker));
     currentlyStored.tracking = false;
     localStorage.setItem(this.stock.ticker, JSON.stringify(currentlyStored));
+
+    
+    this.removedWatchlist = true;
+
+    setTimeout(() => this.removedWatchlist = false, 5000);
+    
   }
 
   ngOnDestroy() {

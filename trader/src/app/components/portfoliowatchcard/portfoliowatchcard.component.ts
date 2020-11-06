@@ -33,8 +33,8 @@ export class PortfoliowatchcardComponent implements OnInit {
   buyModalClose() {
     let priceToAdd = Number((this.stockItem.lastPrice * this.tempQuantity).toFixed(2));
     this.stockItem.quantity += this.tempQuantity;
-    this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.stockItem.totalCost += priceToAdd;
+    this.stockItem.totalCost = Number(this.stockItem.totalCost.toFixed(2))
     this.costPerShare =  Number((this.stockItem.totalCost/this.stockItem.quantity).toFixed(2));
     this.marketValue =  Number((this.stockItem.quantity * this.stockItem.lastPrice).toFixed(2));
     this.change = Number((this.stockItem.lastPrice - this.costPerShare).toFixed(2));
@@ -43,7 +43,7 @@ export class PortfoliowatchcardComponent implements OnInit {
     storedStock.quantity = this.stockItem.quantity;
     storedStock.totalCost = this.stockItem.totalCost;
     localStorage.setItem(storedStock.ticker, JSON.stringify(storedStock));
-
+    this.tempQuantity = 0
   }
 
   sellModalClose() {
@@ -64,6 +64,7 @@ export class PortfoliowatchcardComponent implements OnInit {
     if (this.stockItem.quantity == 0) {
       this.deleteStockItem.emit(this.stockItem);
     }
+    this.tempQuantity = 0
     
   }
 

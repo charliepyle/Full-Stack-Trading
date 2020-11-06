@@ -13,10 +13,16 @@ export class HomeComponent implements OnInit {
 
   search = new FormControl('');
   stocks = [];
+  tempSearch: string = 'Enter stock name';
+  loading:boolean = false;
   constructor(private router: Router, private searchService:SearchService) { }
 
   onSubmit(stock) {
-    this.router.navigate(['/details/' + stock.ticker]);
+    this.tempSearch = stock.ticker
+  }
+
+  onReroute() {
+    this.router.navigate(['/details/' + this.tempSearch]);
   }
 
 
@@ -29,16 +35,20 @@ export class HomeComponent implements OnInit {
 
   textChanged() {
     // this.stocks = []
-    this.searchService.getAutocomplete(this.search.value).subscribe(stocksReturned => {
+    this.loading=true;
+    this.searchService.getAutocomplete(this.tempSearch).subscribe(stocksReturned => {
       console.log(stocksReturned);
       if (stocksReturned == null) {
         this.stocks = []
+        this.loading=false;
       }
       else {
         this.stocks = Array.from(stocksReturned);
         console.log(this.stocks);
+        this.loading=false;
       }
     })
+    
   }
 
   ngOnInit(): void {

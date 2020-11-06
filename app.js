@@ -94,42 +94,46 @@ app.get('/details/:ticker', function (req, res) {
 
 
     const query_ticker = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         try {
            resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}?token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
+          reject(error);
         }
       })  
     }
 
     const iex_ticker = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         try {
            resolve(axios.get(`https://api.tiingo.com/iex/${ticker}?token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
+          reject(error);
         }
       })  
     }
 
 
     const historical_data = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         try {
            resolve(axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${twoYearsAgo}&resampleFreq=${dailyResampleFreq}&columns=open,high,low,close,volume&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
+          reject(error);
         }
       })  
     }
    
     const today_data = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         try {
            resolve(axios.get(`https://api.tiingo.com/iex/${ticker}/prices?startDate=${startDate}&resampleFreq=4min&columns=open,high,low,close,volume&token=${tiingoKey}`));
         } catch (error) {
           console.error(error);
+          reject(error);
         }
       })  
     }
@@ -137,11 +141,12 @@ app.get('/details/:ticker', function (req, res) {
 
 
     const news_data = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         try {
            resolve(axios.get(`https://newsapi.org/v2/everything?apiKey=${newsKey}&q=${ticker}`));
         } catch (error) {
           console.error(error);
+          reject(error);
         }
       })
       
@@ -274,7 +279,7 @@ app.get('/details/:ticker', function (req, res) {
       return res.send(to_return)
 
 
-    }).catch(e => {return e});
+    }).catch(e => {console.log(e); return new Error(e); }).catch(e => { console.error(e); return e;});
   })
 
 app.listen(port, () => {

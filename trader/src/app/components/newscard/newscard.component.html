@@ -1,8 +1,14 @@
 <div>
-    <mat-card role='button' (click)='modalOpen(content)' class='newsCard'>
-        <img mat-card-image class='newsImage' [src]="newsItem.urlToImage" alt='photo'>
-        <mat-card-content class='newsText' [innerHtml]="innerhtml"></mat-card-content>
-    </mat-card>
+    <div role='button' (click)='modalOpen(content)' class='card newsCard'>
+        <div class="row">
+            <div class="col">
+                <img class='card-img newsImage' [src]="newsItem.urlToImage" alt='photo'>
+            </div>
+           <div class="col">
+                <div class='card-body newsText' [innerHtml]="innerhtml"></div>
+           </div>
+        </div>
+    </div>
 
     <ng-template #content let-modal>
         <div class="modal-header" style='display:block'>
@@ -19,17 +25,17 @@
           <h2><b>{{newsItem.title}}</b></h2>
           <h4 [innerHtml]="innerDescription"></h4>
           <span style='color: grey'><h4>For more details click <a [attr.href]="newsItem.url">here</a></h4></span>
-            <mat-card>
-            <h3>Share</h3>
-            <h3>
-                <a class="twitter-share-button"
-                [href]="getTwitterURL()">
-                <i style='font-size: 3em' class="fab fa-twitter"></i></a>
-                <a class="facebook-share-button"
-                [href]="getFacebookURL()">
-                <i style='font-size: 3em' class="fab fa-facebook"></i></a>
-            </h3>
-            </mat-card>
+            <div class='card'>
+                <h3 style='padding: 5px;'>Share</h3>
+                <h3 style='padding: 5px;'>
+                    <a class="twitter-share-button"
+                    [href]="getTwitterURL()">
+                    <i style='font-size: 3em' class="fab fa-twitter"></i></a>
+                    <a class="facebook-share-button"
+                    [href]="getFacebookURL()">
+                    <i style='font-size: 3em' class="fab fa-facebook"></i></a>
+                </h3>
+            </div>
         </div>
     </ng-template>
 </div>

@@ -1,33 +1,33 @@
+<div class='navbar-container'>
+    <nav class="navbar navbar-light justify-content-between">
+        <a class="navbar-brand" href="#"><span style="color:lightgray"><p>Stock Search</p></span></a>
+        <!-- Links -->
+        <ul class="navbar-nav list-group-horizontal ml-auto">
+            <li class="active home nav-item">
+                <a class="nav-link" href="#"><span style="color:lightgray"><p>Search</p></span></a>
+            </li>
+            <li class="watchlist nav-item">
+                <a class="nav-link" href="/watchlist"><span style="color:lightgray"><p>Watchlist</p></span></a>
+            </li>
+            <li class="portfolio nav-item">
+                <a class="nav-link" href="/portfolio"><span style="color:lightgray"><p>Portfolio</p></span></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
 <div class="container">
     <h1 class="title"><b>STOCK SEARCH</b></h1>
-
-    <!-- <div class="input-group md-form form-sm form-2 pl-0">
-        <input class="form-control my-0 py-1 red-border"  rounded="true" type="text" placeholder="Search" [formControl]='search' (change)='textChanged()' [matAutocomplete]="auto" aria-label="Search">
-        <div class="input-group-append">
-          <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
-              aria-hidden="true"></i></span>
-        </div>
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option role='button' *ngFor="let stock of stocks" [value]="stock" (click)='onSubmit(stock)'>
-            {{stock.ticker}} | {{stock.companyName}}
-            </mat-option>
-        </mat-autocomplete>
-      </div>
-     -->
-    <!-- <form class="form-class form-inline d-flex justify-content-center md-form form-sm">
-        <input class="form-control form-control-sm mr-3 w-75" type="text" placeholder="Search" [formControl]='search' (change)='textChanged()' [matAutocomplete]="auto"
-          aria-label="Search">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option role='button' *ngFor="let stock of stocks" [value]="stock" (click)='onSubmit(stock)'>
-            {{stock.ticker}} | {{stock.companyName}}
-            </mat-option>
-        </mat-autocomplete>
-      </form> -->
     
     <form class='form-class'>
-        <!-- <i class="icon fa fa-search"></i> -->
-        <input type='text' class='search-bar' [formControl]='search' (change)='textChanged()' [matAutocomplete]="auto"> 
+        <div class="search-inner">
+            <span style='color:grey'><i (click)='onReroute()' class="icon fa fa-search"></i>
+            <input type='text' class='search-bar' [formControl]='search' (ngModelChange)="textChanged()" [(ngModel)]="tempSearch" [matAutocomplete]="auto"></span>
+        </div>
+        <div *ngIf='loading' class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option role='button' *ngFor="let stock of stocks" [value]="stock" (click)='onSubmit(stock)'>
             {{stock.ticker}} | {{stock.companyName}}

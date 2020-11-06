@@ -1,28 +1,28 @@
-a {
-    color: white;
-}
 .navbar {
     background-color: #7c4dff;
 
 }
-
-ul {
+.navbar-nav {
     display: flex;
-    padding: 5px;
+    text-align: center;
 }
-
-ul > li {
-    margin: 5px;
+.nav-item {
+    margin: 5px; 
     padding-right: 10px;
     padding-left: 20px;
     margin-left: 10px;
 }
 
-a:hover {
+ul > li.active {
     border: 1px solid white;
-    border-radius: 20%;     
+    border-radius: 40%;     
 }
 
-.test-container {
+a:hover p{
+    color: white;
+}
+
+.navbar-container {
     margin-bottom: 2%;
+    width: 100%;
 }

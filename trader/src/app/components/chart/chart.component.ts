@@ -87,6 +87,8 @@ export class ChartComponent implements OnInit {
             align: 'right',
             x: -5
           },
+
+          showLastLabel: true,
   
           title: {
             text: 'OHLC',
@@ -242,6 +244,14 @@ export class ChartComponent implements OnInit {
           minTickInterval: 1
         },
 
+        yAxis: {
+          showLastLabel: true,
+          
+          labels: {
+            enabled: true,
+          }
+        },
+
 
         tooltip: {
           split: true
@@ -259,7 +269,10 @@ export class ChartComponent implements OnInit {
           name: this.stock.ticker,
           type: 'line',
           data: stockClose,
-          color: color
+          color: color,
+          label: {
+            enabled: true
+          },
           // fillColor: {
           //   linearGradient: [0, 0, 0, 300],
           //       stops: [
